@@ -4,22 +4,22 @@
 # valuation_history_reliable: false when own-history P/E is distorted (e.g. HDFC Bank after its 2023 merger).
 # profile : standard | bank | airline_lease  (decides which ratios are meaningful)
 INE040A01034: {symbol: HDFCBANK, screener: HDFC BANK LTD, sector: Banks, profile: bank, valuation_history_reliable: false, conviction: standard}
-INE101A01026: {symbol: M&M, screener: MAHINDRA & MAHINDRA LTD, sector: Automobiles, profile: standard}
-INE200M01039: {symbol: VBL, screener: VARUN BEVERAGES LTD, sector: Beverages, profile: standard}
-INE249Z01020: {symbol: MAZDOCK, screener: MAZAGON DOCK SHIPBUILDERS LTD, sector: Defence shipbuilding, profile: standard}
-INE646L01027: {symbol: INDIGO, screener: INTERGLOBE AVIATION LTD, sector: Airlines, profile: airline_lease}
-INE731H01025: {symbol: ACE, screener: ACTION CONSTRUCTION EQUIPMENT LTD, sector: Construction equipment, profile: standard}
-INE022Q01020: {symbol: IEX, screener: INDIAN ENERGY EXCHANGE LTD, sector: Power exchange, profile: standard}
-INE0W2G01015: {symbol: SAGILITY, screener: SAGILITY LTD, sector: Business services, profile: standard}
-INE12UN01015: {symbol: SHADOWFAX, screener: SHADOWFAX TECHNOLOGIES LTD, sector: Logistics, profile: standard}
-INE0HOQ01053: {symbol: GROWW, screener: BILLIONBRAINS GARAGE VENTURES LTD, sector: Brokerage and wealth platforms, profile: broker}
-INE0LEZ01016: {symbol: ATHERENERG, screener: ATHER ENERGY LTD, sector: Automobiles, profile: standard}
+INE101A01026: {symbol: M&M, screener: MAHINDRA & MAHINDRA LTD, sector: Automobiles, profile: standard,  conviction: standard}
+INE200M01039: {symbol: VBL, screener: VARUN BEVERAGES LTD, sector: Beverages, profile: standard, conviction: standard}
+INE249Z01020: {symbol: MAZDOCK, screener: MAZAGON DOCK SHIPBUILDERS LTD, sector: Defence shipbuilding, profile: standard, conviction: starter}
+INE646L01027: {symbol: INDIGO, screener: INTERGLOBE AVIATION LTD, sector: Airlines, profile: airline_lease,conviction: starter}
+INE731H01025: {symbol: ACE, screener: ACTION CONSTRUCTION EQUIPMENT LTD, sector: Construction equipment, profile: standard,conviction: standard}
+INE022Q01020: {symbol: IEX, screener: INDIAN ENERGY EXCHANGE LTD, sector: Power exchange, profile: standard, conviction: core}
+INE0W2G01015: {symbol: SAGILITY, screener: SAGILITY LTD, sector: Business services, profile: standard, conviction: starter}
+INE12UN01015: {symbol: SHADOWFAX, screener: SHADOWFAX TECHNOLOGIES LTD, sector: Logistics, profile: standard,conviction: core}
+INE0HOQ01053: {symbol: GROWW, screener: BILLIONBRAINS GARAGE VENTURES LTD, sector: Brokerage and wealth platforms, profile: broker, conviction: core}
+INE0LEZ01016: {symbol: ATHERENERG, screener: ATHER ENERGY LTD, sector: Automobiles, profile: standard, conviction: core}
 # US stocks: fundamentals from SEC EDGAR (ticker), price from your WealthLens export.
-US:AMD: {symbol: AMD, edgar: AMD, sector: Semiconductors, profile: standard}
-US:NVDA: {symbol: NVDA, edgar: NVDA, sector: Semiconductors, profile: standard}
-US:META: {symbol: META, edgar: META, sector: Internet platforms, profile: standard}
-US:GOOGL: {symbol: GOOGL, edgar: GOOGL, sector: Internet platforms, profile: standard}
-US:AMZN: {symbol: AMZN, edgar: AMZN, sector: E-commerce and cloud, profile: standard}
-US:TSLA: {symbol: TSLA, edgar: TSLA, sector: Automobiles, profile: standard}
-US:ELF: {symbol: ELF, edgar: ELF, sector: Cosmetics, profile: standard}
-US:SOFI: {symbol: SOFI, edgar: SOFI, sector: Fintech and banking, profile: bank}
+US:AMD: {symbol: AMD, edgar: AMD, sector: Semiconductors, profile: standard, conviction: core}
+US:NVDA: {symbol: NVDA, edgar: NVDA, sector: Semiconductors, profile: standard, conviction: core}
+US:META: {symbol: META, edgar: META, sector: Internet platforms, profile: standard, conviction: core}
+US:GOOGL: {symbol: GOOGL, edgar: GOOGL, sector: Internet platforms, profile: standard,conviction: standard}
+US:AMZN: {symbol: AMZN, edgar: AMZN, sector: E-commerce and cloud, profile: standard,conviction: core}
+US:TSLA: {symbol: TSLA, edgar: TSLA, sector: Automobiles, profile: standard,conviction: standard}
+US:ELF: {symbol: ELF, edgar: ELF, sector: Cosmetics, profile: standard, conviction: starter}
+US:SOFI: {symbol: SOFI, edgar: SOFI, sector: Fintech and banking, profile: bank,conviction: tracking}
