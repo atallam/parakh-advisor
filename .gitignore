@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+# personal data never goes to git
+data/inbox/*
+!data/inbox/.gitkeep
+out/*
+!out/.gitkeep
+
+data/cache/*
+!data/cache/.gitkeep
+
+# run state reflects your positions; _to_delete is scratch
+data/advice/*
+!data/advice/.gitkeep
+_to_delete/

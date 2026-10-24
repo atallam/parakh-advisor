@@ -1,0 +1,10 @@
+# Your risk policy. Defaults agreed 21 Oct 2026; change here, not in code.
+version: 1
+single_name_cap_pct: 10        # of listed equity, direct stocks only
+top3_cap_pct: 35               # three largest direct stocks together
+single_sector_cap_pct: 30      # used from Day 4, when sectors are known
+dust_pct: 0.1                  # below this share of listed equity a position is "too small to matter"
+hysteresis_buffer_pp: 2        # leave TRIM only when this far under the cap
+dcf_discount_rate:             # used from Day 3
+  US: 0.10
+  IN: 0.15

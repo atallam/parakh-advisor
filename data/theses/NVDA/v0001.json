@@ -1,0 +1,116 @@
+{
+  "instrument_id": "US:NVDA",
+  "version": 1,
+  "as_of_data_date": "2026-07-26",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:3225d3e13effcf3257f0dd9c30e89b4f87ed76ad28f902df297370d59a4f540e",
+  "business_summary": "NVIDIA Corporation is a semiconductor company. The evidence supplied is financial metrics only, with no documents describing products or customers. Revenue grew at a 100% 3-year CAGR to FY26, operating margin was 61.7%, and borrowings are minimal at 0.05x equity.",
+  "why_own": "The numbers show very fast growth (revenue 3-year CAGR of 100%, net profit 3-year CAGR of 202%) with a 61.7% operating margin, ROCE of 85.5% and almost no debt. No investor documents were supplied, so there are no qualitative drivers, and the thesis rests on reported financials alone; the P/E of 27x has no comparison to its own history.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a high rate: the 3-year revenue CAGR stays well above 40%, against 100% now. (warn line tightened by code from 40 to 70.03.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 70.03,
+      "break_threshold": 25.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202601",
+        "MET.rev_cagr_5@202601"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds at a high level, above 50%, against 61.7% now. It is up 40.3 points over three years, and whether that level lasts is untested.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 50.0,
+      "break_threshold": 40.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202601",
+        "MET.op_margin_chg@202601"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Profit converts into cash: cash from operations stays at 0.7x net profit or better, against 0.86x now.",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.7,
+      "break_threshold": 0.5,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202601",
+        "MET.np_fy@202601"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Returns on capital stay very high: ROCE above 50%, against 85.5% now. (warn line tightened by code from 50 to 59.84.)",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 59.84,
+      "break_threshold": 30.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202601",
+        "MET.roe@202601"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 35%, well under the current 61.7%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 35.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "3-year revenue CAGR falls below 15%, which would end the high-growth case.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 15.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is high on book value (price/book 33x) and the P/E of 27x on trailing profit has no comparison to the company's own history, so there is little cushion if growth slows.",
+      "evidence_ids": [
+        "MET.pb@202601",
+        "MET.pe_ttm@202607",
+        "MET.pe_vs_hist@202607"
+      ]
+    },
+    {
+      "statement": "Margins rose 40 points in three years and growth rates are extreme (100% revenue CAGR, 202% profit CAGR). Whether these can be sustained is untested in the evidence, and the growth rates will be hard to repeat.",
+      "evidence_ids": [
+        "MET.op_margin_chg@202601",
+        "MET.rev_cagr_3@202601",
+        "MET.np_cagr_3@202601"
+      ]
+    },
+    {
+      "statement": "Cash from operations was 0.86x net profit in FY26, below 1x, so reported profit is not fully matched by cash.",
+      "evidence_ids": [
+        "MET.cfo_np@202601"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis rests on financials alone: no document describes products, customers or demand, so nothing explains why 100% growth persists. The thesis would be wrong if FY23 was a trough base and margins mean-revert. Margin three years ago was about 21% (61.7 minus 40.3), so both the CAGR and the margin gain are measured from a low start. The kill lines look lenient: margin must fall to 35% (27 points) and the 3-year CAGR to 15% before anything trips. Cash conversion of 0.86x is already below 1x. The P/E of 27x has no history to compare against, and P/B is 33x, so there is little cushion if growth slows. What would change this view: Evidence that the margin and growth are structural, such as documents showing diversified, contracted demand, or several more quarters with operating margin above 50% and cash conversion at or above 1x.",
+  "change_decision": "NEW",
+  "change_log": [],
+  "rejected_changes": []
+}

@@ -1,0 +1,146 @@
+{
+  "instrument_id": "US:AMD",
+  "version": 1,
+  "as_of_data_date": "2026-06-27",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:b4099a07a9069897f802e7bd0a1c8572738e7a43b32c3cabebc5aa1afcc52913",
+  "business_summary": "Advanced Micro Devices is a semiconductor company. Revenue grew 13.64% a year over three years and 28.82% over five. FY25 operating margin was 12.17%, 4.95 percentage points above three years earlier. Borrowings are small at 0.05 times equity. Net profit is positive, with no loss-making quarter in the last four.",
+  "why_own": "The case rests on sustained revenue growth, margins that have widened over three years, and strong cash conversion (1.78 times profit) on a nearly debt-free balance sheet. The evidence is numbers only, with no supplied documents, so there are no qualitative drivers. Returns on capital are modest (ROCE 6.49%) against a trailing P/E of 135.68 times, so the thesis depends on growth continuing.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 13.64%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": 5.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds the gains of the last three years (12.17% in FY25, up 4.95 percentage points).",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": 7.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Reported profit is backed by cash: operating cash flow stays well above net profit (1.78 times currently). (warn line tightened by code from 1 to 1.25.)",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 1.25,
+      "break_threshold": 0.7,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202512",
+        "MET.np_fy@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Returns on capital improve from the current low level (ROCE 6.49%) as profit grows.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 5.0,
+      "break_threshold": 3.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512",
+        "MET.np_cagr_3@202512"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Return on equity should stay above 10%. (added by code: currently 7.19.)",
+      "kind": "metric",
+      "indicator": "roe",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "H2",
+      "statement": "Trailing P/E should stay below 60x, or the price needs years of flawless growth. (added by code: currently 135.68.)",
+      "kind": "metric",
+      "indicator": "pe_ttm",
+      "direction": "lte",
+      "warn_threshold": 60.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.pe_ttm@202606"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 6%, which would erase most of the three-year margin gain.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 6.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Operating cash flow falls below half of net profit.",
+      "indicator": "cfo_np",
+      "op": "<",
+      "threshold": 0.5,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is demanding: trailing P/E is 135.68 times and price/book is 13.86 times, so little room for growth or margin disappointment. The comparison with the stock's own 5-year P/E history is not available.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202512",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Returns on capital are low (ROCE 6.49%, ROE 7.19%) relative to the price paid for the equity. Why they are low has not been tested with this evidence.",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512",
+        "MET.pb@202512"
+      ]
+    },
+    {
+      "statement": "Growth is slowing from the longer-term pace (3-year revenue CAGR 13.64% against 28.82% over five years). Trailing 4-quarter net profit (6434 USD m) is well above the FY25 figure (4335 USD m), so profit is moving fast and the cause is untested.",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512",
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512"
+      ]
+    }
+  ],
+  "stance": "WEAKENING",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis needs growth to justify a 135.68x trailing P/E, yet revenue growth is already slowing (3-year CAGR 13.64% vs 28.82% over five years) and returns are low (ROE 7.19%, ROCE 6.49%). It would be wrong if revenue growth fell toward the 5% break line, or if margins slipped back to the pre-expansion level. The thresholds are lenient: the operating-margin kill line of 6% is below the roughly 7.2% starting point, so it would only trip after the whole three-year gain is gone. The D4 ROCE warn line of 5% sits below today's level. In the investor's own holdings, only Tesla and e.l.f. trade at higher P/Es. What would change this view: Evidence that revenue growth is re-accelerating and that trailing profit growth is backed by cash flow, with ROCE rising well above its current level, would justify the multiple and remove my objection.",
+  "change_decision": "NEW",
+  "change_log": [],
+  "rejected_changes": []
+}

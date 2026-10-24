@@ -1,0 +1,104 @@
+{
+  "instrument_id": "US:SOFI",
+  "version": 1,
+  "as_of_data_date": "2026-06-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:4b1d234429e7749b88c4fafef438da23eb4115902d51edd303a0e8a94ea64c95",
+  "business_summary": "SoFi Technologies is classed as fintech and banking. Revenue has compounded about 18% a year over three years and about 43% over five. Net profit is positive: 481.32 USD m in FY25 and 636.26 USD m over the last four quarters. Several bank-inapplicable ratios are not available.",
+  "why_own": "The case rests on sustained revenue growth (about 18% a year over three years) together with profits that have turned positive, with no loss-making quarter in the last four. Evidence is thin: there are no supplied documents, profit growth is undefined, and there is no P/E history to compare against, so the thesis is limited to a few metric drivers.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate; the 3-year revenue CAGR is 17.99% today. (warn line tightened by code from 12 to 12.59.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 12.59,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Profitability on equity improves from its current low level; FY25 ROE is 5.66%, so the profits must earn a better return on equity as the business grows.",
+      "kind": "metric",
+      "indicator": "roe",
+      "direction": "gte",
+      "warn_threshold": 4.0,
+      "break_threshold": 2.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roe@202512",
+        "MET.np_fy@202512",
+        "MET.np_ttm@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "The company stays profitable every quarter; none of the last 4 quarters was loss-making.",
+      "kind": "metric",
+      "indicator": "loss_quarters_4",
+      "direction": "lte",
+      "warn_threshold": 1.0,
+      "break_threshold": 2.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.loss_quarters_4@202512",
+        "MET.np_ttm@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "More than 2 of the last 4 quarters are loss-making, which would undo the profitability case.",
+      "indicator": "loss_quarters_4",
+      "op": ">",
+      "threshold": 2.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "ROE falls below 2%, meaning profits no longer earn a meaningful return on equity.",
+      "indicator": "roe",
+      "op": "<",
+      "threshold": 2.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is demanding relative to returns: P/E is 29.8x and price/book is 1.81x while ROE is only 5.66%. Whether this is high against its own history is untested, because P/E history is unavailable.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202512",
+        "MET.roe@202512",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "The profit record is short. Net profit growth over 3 years is undefined because profit was zero or negative at the start or end of the period, so the durability of current profits is unproven.",
+      "evidence_ids": [
+        "MET.np_cagr_3@202512",
+        "MET.np_fy@202512"
+      ]
+    },
+    {
+      "statement": "Revenue growth has slowed from the 5-year pace (43.07% CAGR) to the 3-year pace (17.99% CAGR). The evidence does not say why, so further slowing is a risk.",
+      "evidence_ids": [
+        "MET.rev_cagr_5@202512",
+        "MET.rev_cagr_3@202512"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis is wrong if SoFi's profits are a short, cyclical upswing rather than durable earnings. At 29.8x earnings and 1.81x book, the price assumes ROE climbs well above 5.66%. The tripwires are too lenient to flag that. ROE only breaks below 2%, and the kill rule needs 3 of 4 quarters to be loss-making. Revenue growth has already slowed from 43% to 18% a year, and the break line of 8% allows more than a halving. With no profit-growth history and no P/E history, the 'INTACT' status rests on three backward-looking metrics. What would change this view: Several more quarters of profit at or above the current trailing level, with ROE rising clearly above the 5.66% FY25 level and revenue growth holding near the 18% 3-year pace, would drop the objection.",
+  "change_decision": "NEW",
+  "change_log": [],
+  "rejected_changes": []
+}

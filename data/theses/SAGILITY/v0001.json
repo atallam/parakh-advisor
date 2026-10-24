@@ -1,0 +1,116 @@
+{
+  "instrument_id": "INE0W2G01015",
+  "version": 1,
+  "as_of_data_date": "2026-09-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:f8ba665bac5c71aeb6c921ac22e9f62da73d1583a3b1a5f1b41149b973e58340",
+  "business_summary": "Sagility is a business services company. It grew sales at a 19.47% three-year CAGR to FY26, with an operating margin of 24.53% and low borrowings (debt/equity 0.11x). Net profit was Rs 924.77 cr in FY26 and Rs 1026.41 cr over the last four quarters. The evidence does not describe its operations.",
+  "why_own": "The case rests on steady double-digit revenue growth at a stable, high operating margin, with profit backed by cash and little debt. Evidence is thin: no supplied documents, no 5-year growth figure and no comparison of valuation with its own history, so the drivers are metric-only and the reason profit has grown much faster than sales is untested.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 19.47%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 14.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds near its current 24.53% level; it was essentially unchanged over three years (-0.1 pp).",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 22.0,
+      "break_threshold": 19.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Reported profit is backed by cash: operating cash flow is 1.3x net profit. (warn line tightened by code from 0.9 to 0.91.)",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.91,
+      "break_threshold": 0.7,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays conservative, with debt/equity at 0.11x and interest cover at 13.49x. (warn line tightened by code from 0.4 to 0.14.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.14,
+      "break_threshold": 0.7,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 17%, well below the current 24.53%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 17.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Three-year revenue CAGR falls below 8%, which would end the growth case.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Net profit 3-year CAGR is 86.06% against revenue growth of 19.47%, with margin flat over the same period. The evidence does not explain this gap, so the sustainability of profit growth is untested.",
+      "evidence_ids": [
+        "MET.np_cagr_3@202603",
+        "MET.rev_cagr_3@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "statement": "Returns on capital are modest (ROCE 12.42%, ROE 10.28%) for a stock at 20.74x trailing earnings and 2.2x book. No comparison with its own valuation history is available.",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603",
+        "MET.pe_ttm@202609",
+        "MET.pb@202603",
+        "MET.pe_vs_hist@202609"
+      ]
+    },
+    {
+      "statement": "The record is short: the 5-year revenue CAGR is not available, so the durability of growth is less proven.",
+      "evidence_ids": [
+        "MET.rev_cagr_5@202603"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis could be wrong if the 86% three-year profit CAGR came from items below the operating line (lower interest, depreciation or tax, or a depressed starting base) rather than repeatable operations. Revenue grew 19.47% and operating margin was flat (-0.1 pp), so operations alone cannot explain that gap. If profit growth reverts toward revenue growth, a 20.74x trailing P/E on a 12.42% ROCE and 10.28% ROE looks expensive. The monitoring thresholds are also loose: margin must fall about 7.5 pp to 17% before a kill, and growth must fall below 8%. Deterioration could go unflagged for a long time. The evidence is thin, so this is a challenge, not a proof. What would change this view: A breakdown showing that the FY23-FY26 profit growth came from operating drivers that continue (not one-off or below-the-line items or a depressed base), together with a P/E that is not above this stock's own 5-year median.",
+  "change_decision": "NEW",
+  "change_log": [],
+  "rejected_changes": []
+}

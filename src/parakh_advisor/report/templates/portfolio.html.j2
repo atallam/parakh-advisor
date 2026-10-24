@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parakh Portfolio Advisory</title>
+<style>
+:root {
+  --bg: #f7f6f2; --surface: #ffffff; --text: #1d1d1b; --muted: #5c5b55; --line: #e3e1d8;
+  --accent: #1f5c4a; --trim: #a4331f; --trim-bg: #fbe9e5; --dust: #7a5a00; --dust-bg: #fbf1d3;
+  --review: #3b4a66; --review-bg: #e8ecf4; --warn: #8a4b00; --warn-bg: #fdeccf; --bar: #1f5c4a; --track: #ece9de;
+}
+:root:not([data-theme="light"]) { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141412; --surface: #1d1d1a; --text: #ecebe5; --muted: #a3a197; --line: #34332e;
+    --accent: #6fcfae; --trim: #ff9c88; --trim-bg: #3a1d17; --dust: #f0cd6a; --dust-bg: #35290b;
+    --review: #a9b9d9; --review-bg: #222a3a; --warn: #f2b46a; --warn-bg: #36260f; --bar: #6fcfae; --track: #2a2a26;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141412; --surface: #1d1d1a; --text: #ecebe5; --muted: #a3a197; --line: #34332e;
+  --accent: #6fcfae; --trim: #ff9c88; --trim-bg: #3a1d17; --dust: #f0cd6a; --dust-bg: #35290b;
+  --review: #a9b9d9; --review-bg: #222a3a; --warn: #f2b46a; --warn-bg: #36260f; --bar: #6fcfae; --track: #2a2a26;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 56px; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; }
+h2 { font-size: 1.1rem; margin: 32px 0 10px; }
+.sub { color: var(--muted); font-size: .9rem; }
+.notice { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+  padding: 10px 14px; border-radius: 6px; margin: 16px 0; font-size: .9rem; color: var(--muted); }
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 6px 18px; }
+.verdict p { margin: 12px 0; font-size: 1.05rem; }
+.verdict p:first-child { font-weight: 600; }
+.health { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 10px 14px; margin: 14px 0; font-size: .92rem; }
+.health ul { margin: 6px 0 0; padding-left: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.row { display: grid; grid-template-columns: 130px 1fr 70px; gap: 10px; align-items: center; margin: 7px 0; font-size: .9rem; }
+.row .lbl { overflow-wrap: anywhere; }
+.track { background: var(--track); border-radius: 4px; height: 10px; position: relative; }
+.fill { background: var(--bar); height: 100%; border-radius: 4px; }
+.val { text-align: right; font-variant-numeric: tabular-nums; }
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: .9rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.name { font-weight: 600; }
+.small { color: var(--muted); font-size: .8rem; }
+.chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: .75rem; font-weight: 700; white-space: nowrap; }
+.chip.TRIM { color: var(--trim); background: var(--trim-bg); }
+.chip.BUILD { color: var(--dust); background: var(--dust-bg); }
+.chip.REVIEW { color: var(--review); background: var(--review-bg); }
+.chip.ADD { color: var(--accent); background: var(--track); }
+.chip.HOLD { color: var(--muted); background: var(--track); }
+.chip.EXIT { color: #fff; background: var(--trim); }
+.alert { border-left: 4px solid var(--line); background: var(--surface); border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: .92rem; }
+.alert.high { border-left-color: var(--trim); } .alert.medium { border-left-color: var(--dust); }
+details.more { margin-top: 6px; font-size: .82rem; color: var(--muted); }
+details.more summary { cursor: pointer; }
+.wbar { position: relative; background: var(--track); height: 8px; border-radius: 4px; min-width: 90px; margin-top: 6px; }
+.wbar .fill { border-radius: 4px; }
+.wbar .cap { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--trim); }
+details { margin-top: 10px; }
+summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.flag { margin: 6px 0; font-size: .88rem; }
+.tag { font-size: .72rem; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; margin-right: 6px; }
+.tag.warn { color: var(--warn); border-color: var(--warn); }
+footer { margin-top: 36px; color: var(--muted); font-size: .82rem; }
+@media (max-width: 560px) { .row { grid-template-columns: 100px 1fr 62px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Portfolio advisory</h1>
+  <div class="sub">
+    Prices as of {{ s.reference_date }}
+    {% if s.oldest_position_as_of %} · positions as of {{ s.oldest_position_as_of }}{% if s.newest_position_as_of != s.oldest_position_as_of %} to {{ s.newest_position_as_of }}{% endif %}{% endif %}
+    {% if s.member_filter %} · member filter on{% else %} · all members combined{% endif %}
+    · net worth {{ s.net_worth_inr | lakh }}
+  </div>
+  <div class="notice">Advisory only. This is an analytical opinion on your own holdings, not a trade instruction or a licensed investment recommendation. Figures are before tax; check the tax impact before acting on any trim. The decision is yours.</div>
+
+  {% if notices %}
+  <div class="health"><strong>Not fully analysed</strong>
+    <ul>{% for n in notices %}<li>{{ n }}</li>{% endfor %}</ul></div>
+  {% endif %}
+
+  {% if alerts %}
+  <h2>Alerts ({{ alerts | length }})</h2>
+  {% for a in alerts %}<div class="alert {{ a.severity }}"><strong>{{ a.symbol }}: {{ a.title }}</strong> <span class="small">· {{ a.severity }}</span><br>{{ a.detail }}{% if a.evidence_ids %} <span class="small">Evidence: {{ a.evidence_ids | join(', ') }}</span>{% endif %}{% if a.would_reverse %}<br><span class="small">What would reverse this: {{ a.would_reverse }}</span>{% endif %}</div>{% endfor %}
+  {% elif alerts_checked %}
+  <h2>Alerts (0)</h2>
+  <div class="alert">No changes since the last run: no thesis, advice or position crossed a threshold.</div>
+  {% endif %}
+
+  <h2>What matters most</h2>
+  <div class="verdict">
+    {% for line in s.verdict %}<p>{{ line }}</p>{% endfor %}
+  </div>
+
+  {% if s.fund_overlap %}
+  <div class="notice"><strong>Fund overlap by category.</strong> {% for l in s.fund_overlap %}<div>{{ l }}</div>{% endfor %}<div class="small">Stock-level overlap (for example funds that also hold Alphabet, Meta or Amazon) needs the funds' own portfolio files and comes later.</div></div>
+  {% endif %}
+
+  {% if s.lookthrough_rows %}
+  <h2>What your funds also hold</h2>
+  <div class="card">
+    {% for l in s.lookthrough_lines %}<p>{{ l }}</p>{% endfor %}
+    <div class="tablewrap"><table style="min-width:520px">
+      <thead><tr><th>Stock</th><th class="num">Direct</th><th class="num">Via funds</th><th class="num">Total</th><th>Held by</th></tr></thead>
+      <tbody>{% for r in s.lookthrough_rows %}<tr><td class="name">{{ r.symbol }}</td><td class="num">{{ '%.1f' | format(r.direct) }}%</td><td class="num">{{ '%.1f' | format(r.via) }}%</td><td class="num">{{ '%.1f' | format(r.total) }}%</td><td class="small">{{ r.funds }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <p class="small">Percent of listed equity. From the funds' own monthly portfolio files; as old as those files.</p>
+  </div>
+  {% endif %}
+
+  {% if health %}
+  <div class="health">
+    <strong>Data health</strong>
+    <ul>{% for line in health %}<li>{{ line }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  <h2>Where the money is</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>Net worth by asset class</strong>
+      {% for a in s.allocation %}
+      <div class="row">
+        <span class="lbl">{{ a.asset_class | class_label }}</span>
+        <span class="track"><span class="fill" style="display:block;width:{{ [a.pct_of_net_worth, 100] | min }}%"></span></span>
+        <span class="val">{{ '%.1f' | format(a.pct_of_net_worth) }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="card">
+      <strong>Listed equity ({{ s.listed_equity_inr | lakh }})</strong>
+      {% for k, v in s.equity_split_pct.items() %}
+      <div class="row">
+        <span class="lbl">{{ k }}</span>
+        <span class="track"><span class="fill" style="display:block;width:{{ [v, 100] | min }}%"></span></span>
+        <span class="val">{{ '%.1f' | format(v) }}%</span>
+      </div>
+      {% endfor %}
+      <p class="small">Top 3 direct stocks: {{ s.top3_names | join(', ') }} = {{ '%.1f' | format(s.top3_pct) }}% (cap {{ '%g' | format(s.policy_top3_cap) }}%).</p>
+    </div>
+  </div>
+
+  <h2>Positions</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Position</th><th class="num">Value</th><th>Share of listed equity</th><th class="num">Profit/loss</th><th>Advice today</th></tr>
+      </thead>
+      <tbody>
+      {% for h in equity_like %}
+        <tr>
+          <td>
+            <div class="name">{{ h.symbol or h.name }}</div>
+            <div class="small">{% if h.symbol %}{{ h.name }} · {% endif %}{% if h.asset_class.value == 'FUND' %}fund{% elif h.asset_class.value == 'ETF' %}ETF{% elif h.asset_class.value == 'US_EQUITY' %}US{% else %}India{% endif %}</div>
+          </td>
+          <td class="num">{{ h.value_inr | inr }}</td>
+          <td style="min-width:140px">
+            {{ '%.2f' | format(h.weight_pct) }}%
+            <div class="wbar"><div class="fill" style="width:{{ [h.weight_pct / max_w * 100, 100] | min }}%"></div>{% if h.asset_class.value in ('IN_EQUITY', 'US_EQUITY') %}<div class="cap" style="left:{{ cap_pos }}%" title="{{ '%g' | format(s.policy_single_cap) }}% cap"></div>{% endif %}</div>
+          </td>
+          <td class="num">{% if h.pnl_pct is not none %}{{ '%+.0f' | format(h.pnl_pct) }}%{% else %}<span class="small">cost pending</span>{% endif %}</td>
+          <td>
+            {% if h.action %}<span class="chip {{ h.action.name.split('_')[0] }}">{{ h.action.value }}</span>{% endif %}
+            {% if h.stance %}<div class="small">Thesis {{ h.stance | lower }} · valuation {{ (h.valuation or 'NA') | lower }} · conviction {{ h.conviction }} · {{ h.thesis_status }}</div>{% endif %}
+            <div class="small">{{ h.note }}</div>
+            {% if h.watch_drivers %}<div class="small">On watch: {{ h.watch_drivers | join('; ') }}</div>{% endif %}
+            {% if h.would_change or h.counter_case or h.fund_lines %}<details class="more"><summary>Why, and what would change this</summary>
+              {% if h.would_change %}<p><strong>What would change this advice:</strong> {{ h.would_change }}</p>{% endif %}
+              {% if h.valuation_basis and h.valuation_basis != 'no fundamentals loaded' %}<p><strong>{{ 'Benchmark' if h.fund_status else 'Valuation basis' }}:</strong> {{ h.valuation_basis | replace('Benchmark proxy: ', '') }}</p>{% endif %}
+              {% for l in h.fund_lines %}<p>{{ l }}</p>{% endfor %}
+              {% if h.counter_case %}<p><strong>The case against (Skeptic):</strong> {{ h.counter_case }}</p>{% endif %}
+            </details>{% endif %}
+            {% if h.flag_codes %}<div class="small">{% for c in h.flag_codes %}<span class="tag{% if c in ('DQ-02','DQ-03','DQ-04','DQ-06') %} warn{% endif %}">{{ c }}</span>{% endfor %}</div>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="small">The red tick marks the {{ '%g' | format(s.policy_single_cap) }}% single-name cap. Positions without a thesis show only risk-based advice. Fund health compares each fund with an index-fund benchmark; it needs the <code>--online</code> flag.</p>
+
+  {% if other %}
+  <h2>Other holdings</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Position</th><th class="num">Value</th><th>Note</th></tr></thead>
+    <tbody>{% for h in other %}<tr><td class="name">{{ h.name }}</td><td class="num">{{ h.value_inr | inr if h.value_inr else "not reported" }}</td><td class="small">{{ h.note or 'Not part of the listed-equity advice.' }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% endif %}
+
+  <h2>Context assets (counted, not advised on)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Asset</th><th class="num">Value</th></tr></thead>
+    <tbody>
+    {% for h in context %}<tr><td>{{ h.name }} <span class="small">· {{ h.asset_class.value | class_label }}</span></td><td class="num">{{ h.value_inr | inr if h.value_inr else "not reported" }}</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+
+  <details>
+    <summary>All data-quality notes ({{ s.flags | length }})</summary>
+    {% for f in warns %}<div class="flag"><span class="tag warn">{{ f.code }}</span>{{ f.message }}</div>{% endfor %}
+    {% for f in infos %}<div class="flag"><span class="tag">{{ f.code }}</span>{{ f.message }}</div>{% endfor %}
+  </details>
+
+  <footer>Parakh Advisor · generated from a WealthLens export · advice for you to weigh, never an instruction to trade. Not investment advice.</footer>
+</main>
+</body>
+</html>
