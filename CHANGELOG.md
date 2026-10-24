@@ -2,6 +2,15 @@
 
 Newest first. Every change to this folder is listed here, so you can see what moved without diffing.
 
+## 2026-10-24 - Day 10: SBI Contra, Invesco Smallcap and Bandhan Small Cap portfolio files
+- Added your SBI Contra (Sep 2026), Invesco India Smallcap (Sep 2026) and Bandhan Small Cap (30 Sep 2026) portfolio files to `data\inbox\funds`. Nippon India Small Cap is not needed: you have exited it (see "To do" below).
+- New: the reader handles a single-scheme PDF with a "Name of the Instrument | % to NAV" table in three side-by-side columns (Bandhan). Industry headings (bold, they carry the sum of their stocks) are skipped, wrapped names are joined, PDF ligature gaps ("Scienti fi c") are closed, cash and grand-total lines and the chart below the table are ignored. Result: 263 holdings, 87.0% of the fund (stated equity 86.4% plus 0.6% REIT).
+- Fix: SBI-style sheets list T-bills, index futures, options, margin money and side tables (derivative expiry dates, quantities) below the portfolio, and the side-table numbers looked like weights. Equity lines only are kept now (a line with an ISIN must hold a real ISIN; government-security ISINs, negative weights and the derivative lines are dropped). SBI Contra reads 88 lines, 92.0% of the fund.
+- Fix: the scheme name is now taken from the "Scheme name" label (SBI) or the first line of the title cell (Invesco), and an AMC-only name such as "INVESCO MUTUAL FUND" is no longer used as the title.
+- Fix (affects the numbers): a holding with an Indian ISIN that is not one of yours was still matched by name, so "Mahindra & Mahindra Financial Services" (SBI Contra, 1.95%) counted as Mahindra & Mahindra. Names are now matched only for lines with no ISIN, a foreign ISIN or the overseas marker.
+- Tests: 3 new in `tests/test_funds.py` (AMC sheet junk, title rules, column PDF) and 1 for the ISIN rule. The 17 tests in that file pass; the whole suite was not run (my sandbox on your laptop is out of disk), so run `uv run pytest` once.
+- To do: your WealthLens export (21 Oct) still lists Nippon India Small Cap as active. Mark it exited in WealthLens and re-export, otherwise the report still counts it.
+
 ## 2026-10-24 - Day 9b: JioBlackRock Flexi Cap portfolio file
 - Added your JioBlackRock Flexi Cap Fund September 2026 portfolio (138 equity lines, 97.84% of the fund) to `data\inbox\funds`.
 - The reader now takes the scheme name from the top of the file, so a file is matched to your fund even when its file name is opaque.

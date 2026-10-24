@@ -115,17 +115,55 @@ def _find_cols(row: list[object]) -> tuple[int | None, int | None, int | None]:
 
 
 def _title(top: list[list[object]]) -> str:
-    """Scheme name from the rows above the header, e.g. 'JioBlackRock Flexi Cap Fund'."""
+    """Scheme name from the rows above the header, e.g. 'JioBlackRock Flexi Cap Fund'.
+
+    Prefers the cell after a "Scheme name" label (SBI), skips AMC-only names such as 'INVESCO MUTUAL FUND',
+    and keeps only the first line of a multi-line cell (Invesco puts a description under the name)."""
+    fallback = ""
     for row in top:
-        for c in row:
-            t = str(c or "").strip()
+        cells = [str(c or "").strip() for c in row]
+        for i, t in enumerate(cells):
+            if re.match(r"scheme name\b", t, re.I):
+                nxt = next((c for c in cells[i + 1 :] if c), "")
+                if nxt:
+                    return nxt.splitlines()[0].strip()
+        for t in cells:
+            first = t.splitlines()[0].strip() if t else ""
             if (
-                t
-                and re.search(r"\bfund\b|\bscheme\b", t, re.I)
-                and not re.search(r"portfolio|statement|as on", t, re.I)
+                first
+                and re.search(r"\bfund\b|\bscheme\b", first, re.I)
+                and not re.search(r"portfolio|statement|as on", first, re.I)
             ):
-                return t
-    return ""
+                if re.fullmatch(r"[\w&.\- ]*mutual fund", first, re.I) and len(first.split()) <= 4:
+                    fallback = fallback or first  # the AMC, not the scheme
+                    continue
+                return first
+    return fallback
+
+
+ISIN_OK = re.compile(r"^[A-Z]{2}[A-Z0-9]{9}\d$")
+NON_EQUITY_NAME = re.compile(
+    r"t-?bills?\b|\bcall option|\bput option|\bindex\b.*\d{2}[-./]\d{2}[-./]\d{4}|margin amount|derivatives? total"
+    r"|net receivable|net payable|\(short\)|^short\b|^long\b",
+    re.I,
+)
+
+
+def _drop_non_equity(
+    rows: list[tuple[str, str, float]], has_isin: bool
+) -> list[tuple[str, str, float]]:
+    """Keep equity lines only. AMC sheets also list T-bills, index futures, options, margin money and, further
+    down, side tables (derivative expiry dates, quantities) whose numbers look like weights. When the file has an
+    ISIN column, a line with an ISIN cell must hold a real ISIN, and government-security ISINs (IN00...) and negative weights
+    (short or option positions) are dropped."""
+    keep = []
+    for isin, name, pct in rows:
+        if pct <= 0 or NON_EQUITY_NAME.search(name):
+            continue
+        if has_isin and isin and (not ISIN_OK.match(isin) or isin.startswith("IN0")):
+            continue
+        keep.append((isin, name, pct))
+    return keep
 
 
 def read_fund_file(path: str | Path) -> FundFile:
@@ -159,6 +197,7 @@ def read_fund_file(path: str | Path) -> FundFile:
             out.rows.append((isin, name, pct))
         # some AMC files start with a row for the scheme itself at 100%: not a holding
         out.rows = [r for r in out.rows if not (not r[0] and r[2] >= 99.5)]
+        out.rows = _drop_non_equity(out.rows, has_isin=isin_i is not None)
         if out.rows:
             if out.total_pct <= 1.5:  # weights given as fractions
                 out.rows = [(i, n, p * 100) for i, n, p in out.rows]
@@ -201,6 +240,85 @@ def parse_factsheet_lines(lines: list[str], section: str, ff: FundFile) -> str:
     return section
 
 
+PCT_TOKEN = re.compile(r"^-?\d+\.\d{2}%$")  # table figures have two decimals; chart ticks ("30.0%") do not
+NAV_STOP = re.compile(r"^(net cash|net current|cash and|cash &|grand total)\b", re.I)
+LIGATURE = re.compile(r"(?<=\w) (ffi|ff|fi|fl) (?=\w)")
+
+
+def parse_nav_columns(words: list[dict], page_width: float) -> list[tuple[str, str, float]]:
+    """One page of a 'Name of the Instrument | % to NAV' portfolio laid out in two or three side-by-side
+    columns (Bandhan). `words` are pdfplumber words with x0, x1, top, text and fontname. Columns are found
+    from the right edges of the percentage figures (they line up within a column). Industry headings are bold
+    and carry the sum of their stocks, so they are skipped; names that wrap onto two lines are joined; PDF
+    ligature gaps ('Scienti fi c') are closed. Cash and grand-total lines are skipped; the chart printed below
+    the table is ignored because its figures have one decimal."""
+    pct_words = [w for w in words if PCT_TOKEN.match(w["text"])]
+    edges: list[float] = []
+    for x in sorted(w["x1"] for w in pct_words):
+        if not edges or x - edges[-1] > 8:
+            edges.append(x)
+    if not edges:
+        return []
+    header_top = min((w["top"] for w in words if w["text"] == "Name"), default=-1.0)
+    words = [w for w in words if w["top"] > header_top + 2.5]  # drop the page title and column headers
+    rows: list[tuple[str, str, float]] = []
+    prev_edge = -1.0
+    for edge in edges:
+        col = [w for w in words if prev_edge + 3 < w["x1"] <= edge + 3]
+        prev_edge = edge
+        col.sort(key=lambda w: (w["top"], w["x0"]))
+        lines: list[list[dict]] = []
+        for w in col:  # cluster into visual lines (tops within 2.5 points)
+            if lines and abs(lines[-1][0]["top"] - w["top"]) <= 2.5:
+                lines[-1].append(w)
+            else:
+                lines.append([w])
+        buf: list[dict] = []
+        for ln in lines:
+            ln.sort(key=lambda w: w["x0"])
+            pct_w = next((w for w in ln if PCT_TOKEN.match(w["text"])), None)
+            name_w = [w for w in ln if w is not pct_w]
+            if pct_w is None:
+                buf += name_w
+                continue
+            parts = buf + name_w
+            buf = []
+            bold = bool(parts) and any("bold" in w.get("fontname", "").lower() for w in parts)
+            name = LIGATURE.sub(r"\1", " ".join(w["text"] for w in parts)).strip()
+            name = re.sub(r"\s+", " ", name)
+            name = re.sub(
+                r"^.*?name of the instrument\s*(% to nav)?\s*", "", name, flags=re.I
+            )  # page heading text sharing the first line
+            if not name or bold or NAV_STOP.match(name):
+                continue
+            rows.append(("", name, float(pct_w["text"][:-1])))
+    return rows
+
+
+def read_nav_columns_pdf(path: str | Path) -> dict[str, FundFile]:
+    """Single-scheme monthly portfolio PDF with a '% to NAV' table in side-by-side columns. The scheme name is
+    the first line mentioning 'Fund' on page 1."""
+    import pdfplumber
+
+    p = Path(path)
+    with pdfplumber.open(p) as pdf:
+        first = (pdf.pages[0].extract_text() or "").splitlines() if pdf.pages else []
+        title = next(
+            (ln.strip() for ln in first if re.search(r"\bfund\b", ln, re.I)), p.stem
+        )
+        ff = FundFile(path=p.name, title=title)
+        for page in pdf.pages:
+            text = page.extract_text() or ""
+            if not re.search(r"name of the instrument", text, re.I) or "% to NAV" not in text:
+                continue
+            words = page.extract_words(extra_attrs=["fontname"])
+            ff.rows += parse_nav_columns(words, float(page.width))
+    ff.rows = [r for r in ff.rows if not re.fullmatch(r"(equity|reit)", r[1], re.I)]
+    if not ff.rows:
+        raise ValueError(f"{p.name}: no 'Portfolio Data' or '% to NAV' table found in this PDF")
+    return {title: ff}
+
+
 def read_fund_pdf(path: str | Path) -> dict[str, FundFile]:
     """Fund-house factsheet PDF (for example PPFAS): every page with a 'Portfolio Data' table, grouped by
     scheme title. Pages are read column by column. Needs pdfplumber."""
@@ -222,8 +340,8 @@ def read_fund_pdf(path: str | Path) -> dict[str, FundFile]:
                     (page.crop(box).extract_text() or "").splitlines(), section, ff
                 )
     out = {k: v for k, v in out.items() if v.rows}
-    if not out:
-        raise ValueError(f"{p.name}: no 'Portfolio Data' table found in this PDF")
+    if not out:  # not a factsheet: try a single-scheme '% to NAV' portfolio laid out in columns
+        return read_nav_columns_pdf(p)
     return out
 
 
@@ -286,7 +404,11 @@ def look_through(
             if isin and not isin.startswith("IN"):
                 abroad += inr
             hit = by_isin.get(isin) if isin in by_isin else None
-            if hit is None:
+            indian_isin = bool(re.match(r"^IN[A-Z0-9]{10}$", isin))
+            if hit is None and not indian_isin:
+                # An Indian ISIN that is not one of your holdings is a different company, whatever its name
+                # (Mahindra & Mahindra Financial Services is not Mahindra & Mahindra), so names are matched
+                # only for lines with no ISIN, a foreign ISIN, or the overseas marker.
                 k = norm_key(name)
                 hit = next((iid for iid, (kk, _) in keys.items() if kk and kk == k), None)
             if hit:

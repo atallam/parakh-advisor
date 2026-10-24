@@ -256,3 +256,116 @@ def test_scheme_title_is_read_from_rows_above_the_header(tmp_path):
     f = read_fund_file(p)
     assert f.title == "JioBlackRock Flexi Cap Fund"
     assert [r[1] for r in f.rows] == ["HDFC Bank Ltd"]
+
+
+def test_amc_sheet_junk_is_not_read_as_holdings(tmp_path):
+    """SBI-style sheet: T-bills, index futures, options, margin money and side tables below the portfolio
+    (expiry dates and quantities) must not be counted as holdings."""
+    from datetime import datetime
+
+    from openpyxl import Workbook
+
+    from parakh_advisor.funds.lookthrough import read_fund_file
+
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["SBI Mutual Fund", "036", "Back to Index"])
+    ws.append(["SCHEME NAME :", "SBI Contra Fund"])
+    ws.append(["Name of the Instrument / Issuer", "ISIN", "Industry", "Qty", "Value", "% to AUM"])
+    ws.append(["HDFC Bank Ltd.", "INE040A01034", "Banks", 1, 1, 4.79])
+    ws.append(["HDFC Bank Ltd. (CALL Option)", "", "", 1, 1, -0.01])
+    ws.append(["364 DAY T-BILL 06.11.26", "IN002025Z328", "", 1, 1, 0.94])
+    ws.append(["Nifty Index 27-10-2026", "LONG", "", 1, 1, 2.52])
+    ws.append(["Margin amount for Derivative positions", "", "", 1, 1, 0.04])
+    ws.append(["Net Receivable / Payable", "", "", 1, 1, -0.57])
+    ws.append(["FSN E-Commerce Ventures Ltd.", datetime(2026, 10, 27), "", 1, 1, 4524.49])
+    p = tmp_path / "sbi.xlsx"
+    wb.save(p)
+    f = read_fund_file(p)
+    assert [r[1] for r in f.rows] == ["HDFC Bank Ltd."]
+    assert f.title == "SBI Contra Fund"  # from the 'Scheme name' label, not the AMC name
+
+
+def test_title_skips_amc_name_and_takes_first_line_of_cell(tmp_path):
+    from openpyxl import Workbook
+
+    from parakh_advisor.funds.lookthrough import read_fund_file
+
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["ISCF", "INVESCO MUTUAL FUND"])
+    ws.append(["Invesco India Small cap Fund\n(An open ended equity scheme)"])
+    ws.append(["Name of the Instrument", "ISIN", "% to Net Assets"])
+    ws.append(["Eternal Limited", "INE758T01015", 4.38])
+    p = tmp_path / "inv.xlsx"
+    wb.save(p)
+    assert read_fund_file(p).title == "Invesco India Small cap Fund"
+
+
+def _w(text, x0, top, bold=False):
+    return {
+        "text": text,
+        "x0": x0,
+        "x1": x0 + 6 * len(text),
+        "top": top,
+        "fontname": "Ubuntu-Bold" if bold else "Ubuntu-Regular",
+    }
+
+
+def test_nav_columns_pdf_page_two_columns_headings_wraps_and_stop():
+    """Bandhan-style page: two columns, bold industry headings skipped, a wrapped name joined, ligature gap
+    closed, the first stock sharing a column with the header is kept, cash line and chart ticks skipped."""
+    from parakh_advisor.funds.lookthrough import parse_nav_columns
+
+    hdr = [_w("PORTFOLIO", 57, 10, True)]
+    hdr += [_w("Name", 57, 28, True), _w("%", 170, 28, True), _w("to", 178, 28, True)]
+    hdr += [_w("Name", 220, 28, True), _w("%", 330, 28, True), _w("to", 338, 28, True)]
+    left = [
+        _w("Banks", 57, 40, True),
+        _w("8.90%", 150, 40, True),
+        _w("HDFC", 57, 52),
+        _w("Bank", 90, 52),
+        _w("1.46%", 150, 52),
+        _w("Viyash", 57, 64),
+        _w("Scienti", 90, 64),
+        _w("fi", 125, 64),
+        _w("c", 135, 64),
+        _w("0.14%", 150, 64),
+        _w("Deepak", 57, 76),
+        _w("Fertilizers", 100, 76),
+        _w("Corporation", 57, 87),  # wrapped second line, pct sits on this line
+        _w("0.29%", 150, 87),
+    ]
+    right = [
+        _w("Paradeep", 220, 40),
+        _w("Phosphates", 270, 40),
+        _w("1.29%", 310, 40),
+        _w("Net", 220, 52),
+        _w("Cash", 240, 52),
+        _w("12.98%", 305, 52),
+        _w("30.0%", 310, 120),  # chart tick below the table: one decimal, ignored
+    ]
+    rows = parse_nav_columns(hdr + left + right, 400)
+    assert rows == [
+        ("", "HDFC Bank", 1.46),
+        ("", "Viyash Scientific", 0.14),
+        ("", "Deepak Fertilizers Corporation", 0.29),
+        ("", "Paradeep Phosphates", 1.29),
+    ]
+
+
+def test_look_through_other_indian_isin_is_not_matched_by_name():
+    """Mahindra & Mahindra Financial Services (its own ISIN) must not count as Mahindra & Mahindra."""
+    from parakh_advisor.funds.lookthrough import FundFile, look_through
+
+    direct = {"INE101A01026": ("MAHINDRA & MAHINDRA LTD", 100.0)}
+    ff = FundFile(
+        path="f",
+        rows=[
+            ("INE774D01024", "Mahindra & Mahindra Financial Services Ltd.", 2.0),
+            ("INE101A01026", "Mahindra & Mahindra Ltd.", 1.0),
+            ("", "Mahindra & Mahindra", 0.5),  # no ISIN (factsheet-style): name match still applies
+        ],
+    )
+    exposures, _, _ = look_through(direct, {"F": ("Some Fund", 1000.0)}, {"F": ff})
+    assert round(exposures[0].via_funds_inr, 2) == 15.0  # 1.0% + 0.5% of 1000, not 2.0% more
