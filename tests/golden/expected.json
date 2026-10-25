@@ -1,0 +1,90 @@
+{
+  "G1": {
+    "name": "GOLDEN INDUSTRIES",
+    "profile": "standard",
+    "metrics": {
+      "rev_cagr_3": 16.9607095285147,
+      "rev_cagr_5": 15.8517718356662,
+      "np_cagr_3": 21.9768570007657,
+      "op_margin": 33.3333333333333,
+      "op_margin_chg": 1.99999999999999,
+      "debt_equity": 0.271186440677966,
+      "roce": 19.4666666666667,
+      "int_cover": 10.4285714285714,
+      "roe": 18.0478821362799,
+      "cfo_np": 0.918367346938776,
+      "np_fy": 49.0,
+      "np_ttm": 48.0,
+      "loss_quarters_4": 0.0,
+      "pe_ttm": 21.25,
+      "pb": 3.45762711864407,
+      "pe_vs_hist": 119.072164948454
+    }
+  },
+  "G2": {
+    "name": "GOLDEN BANK",
+    "profile": "bank",
+    "metrics": {
+      "rev_cagr_3": 15.3728111652437,
+      "rev_cagr_5": 14.3428874209498,
+      "np_cagr_3": 16.6482067507467,
+      "op_margin": null,
+      "op_margin_chg": null,
+      "debt_equity": null,
+      "roce": null,
+      "int_cover": null,
+      "roe": 15.2089136490251,
+      "cfo_np": null,
+      "np_fy": 273.0,
+      "np_ttm": 280.0,
+      "loss_quarters_4": 0.0,
+      "pe_ttm": 18.5714285714286,
+      "pb": 2.72251308900524,
+      "pe_vs_hist": -8.51513019000704
+    }
+  },
+  "G3": {
+    "name": "GOLDEN LOSS",
+    "profile": "standard",
+    "metrics": {
+      "rev_cagr_3": 40.1019665327694,
+      "rev_cagr_5": 43.0969081105256,
+      "np_cagr_3": null,
+      "op_margin": 3.33333333333333,
+      "op_margin_chg": 1.66666666666667,
+      "debt_equity": 2.20588235294118,
+      "roce": 0.917431192660551,
+      "int_cover": 0.166666666666667,
+      "roe": null,
+      "cfo_np": null,
+      "np_fy": -9.0,
+      "np_ttm": -10.0,
+      "loss_quarters_4": 4.0,
+      "pe_ttm": null,
+      "pb": 13.2352941176471,
+      "pe_vs_hist": null
+    }
+  },
+  "G4": {
+    "name": "GOLDEN GAINS",
+    "profile": "standard",
+    "metrics": {
+      "rev_cagr_3": 7.72173450159419,
+      "rev_cagr_5": 7.39409237857793,
+      "np_cagr_3": -9.51941278016978,
+      "op_margin": 17.6666666666667,
+      "op_margin_chg": -4.41666666666666,
+      "debt_equity": 0.295081967213115,
+      "roce": 16.4556962025316,
+      "int_cover": 6.5,
+      "roe": 6.75675675675676,
+      "cfo_np": 1.8,
+      "np_fy": 20.0,
+      "np_ttm": 40.0,
+      "loss_quarters_4": 0.0,
+      "pe_ttm": 37.5,
+      "pb": 4.91803278688525,
+      "pe_vs_hist": 237.837837837838
+    }
+  }
+}

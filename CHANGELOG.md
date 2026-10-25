@@ -2,6 +2,21 @@
 
 Newest first. Every change to this folder is listed here, so you can see what moved without diffing.
 
+## 2026-10-25 - Day 14: quarterly drivers
+- **Why:** the annual drivers lag by up to a year, so a thesis could read INTACT while the newest quarter had already turned (META's operating margin fell from 40% to 20%, AMD, AMZN, GOOGL trailing profit well above the fiscal year).
+- **New metrics (`metrics/quality.py`), each against the same quarter a year earlier so seasonality cancels:** `q_sales_yoy`, `q_np_yoy`, `q_npm_chg` (net margin change, points), `q_np_down_run` (consecutive quarters with lower profit than a year earlier, max 4). Works for India (Screener quarters) and US (10-Q, Q4 derived). N/A with a reason if there is no quarter a year earlier or the year-ago profit was not positive.
+- **New code-owned drivers `QM1..` (`thesis/rules.py`):** added when the newest quarter is adverse, rebuilt on every run, gone when the quarter recovers. Lines: revenue below a year earlier; profit down more than 25%; net margin down more than 5 points; profit lower than a year earlier three quarters running. They only raise WATCH (stance WEAKENING, so no adds), never BROKEN, and never touch the model's frozen drivers. Skipped if the model already monitors that indicator.
+- Effect on advice: a deteriorating quarter now stops an ADD and, if the stock is also RICH, can lead to TRIM. Thresholds are deliberately blunt; a one-off (tax, write-down) shows as WATCH and the reader judges it.
+- The first `thesis` run after this will re-run every stock (new evidence changes the input fingerprint).
+- Tests: 173 passing (12 new in `tests\test_quarterly.py`).
+
+## 2026-10-25 - Day 13: perturbation and golden tests
+- **Golden metrics:** four made-up companies (healthy, bank, loss-making, one-off trailing gain) in `tests\golden\golden_metrics.xlsx`, with plain spreadsheet formulas written from the metric definitions, not from the code, and calculated by LibreOffice. The code agrees with the spreadsheet on all 16 metrics for all four (bank-only gaps included). `python tests/golden/build_golden.py` rebuilds it if the inputs change.
+- **Perturbation tests (`tests\test_consistency.py`):** the advice label changes along the weight axis only at a declared threshold (dust, band edges, the cap, cap minus buffer) and never flickers back; hysteresis holds a concentration trim between 8% and 10%; a 1% price move keeps every valuation band and flips one exactly at its edge; an irrelevant new filing, a 1% price move or a re-run leave the thesis unchanged; evidence order does not change the digest; a stale filing cannot lift confidence; row order and a uniform 1% price rise change no weight or label.
+- Checked that the tests can fail: five deliberate breaks (hysteresis removed, a stray threshold, ROE on year-end instead of average equity, the inflated-profit rule dropped, filing age ignored) were each caught.
+- No code behaviour changed; no bug was found by these tests. Note for the record: a bank has no `op_margin_chg` metric at all (rather than an empty one).
+- Tests: 161 passing.
+
 ## 2026-10-24 - Day 12: automatic filing download (`fetch-docs`)
 - New command `parakh-advisor fetch-docs` fills `data\inbox\research\<SYMBOL>\` for you. Run it, then `thesis`, then `advise --online`.
 - US (fully automatic, SEC EDGAR): the last 3 earnings releases and the management discussion of the latest 10-Q/10-K.

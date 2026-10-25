@@ -10,6 +10,7 @@ Money in Rs crore. Percentages are returned as numbers (12.5 means 12.5 %).
 
 from __future__ import annotations
 
+import math
 import statistics
 from datetime import date
 
@@ -91,6 +92,89 @@ def _op_margin(a: Table, i: int) -> float | None:
     if None in (pbt, intr, dep, oi) or not sales:
         return None
     return (pbt + intr + dep - oi) / sales * 100
+
+
+def _clean(x: float | None) -> float | None:
+    return None if x is None or (isinstance(x, float) and math.isnan(x)) else x
+
+
+def _year_ago(dates: list[date], i: int) -> int | None:
+    """Index of the quarter about one year before quarter i (350-380 days), or None."""
+    for j in range(i - 1, -1, -1):
+        gap = (dates[i] - dates[j]).days
+        if 350 <= gap <= 380:
+            return j
+        if gap > 380:
+            break
+    return None
+
+
+def quarterly_metrics(q: Table) -> list[Metric]:
+    """Latest-quarter signals, each measured against the same quarter a year earlier so seasonality
+    cancels. Annual metrics lag by up to a year; these show a quarter that has already turned."""
+    dates = q.dates
+    sales = [_clean(x) for x in q.get("Sales")]
+    prof = [_clean(x) for x in q.get("Net profit")]
+    i = len(dates) - 1
+    j = _year_ago(dates, i) if i >= 0 else None
+    when = f"quarter ended {dates[i]:%b %Y}" if i >= 0 else "latest quarter"
+    vs = f"{when} vs {dates[j]:%b %Y}" if j is not None else when
+
+    def pct(a: float | None, b: float | None) -> float | None:
+        return None if a is None or b is None or b <= 0 else (a / b - 1) * 100
+
+    s_now, s_then = (sales[i], sales[j]) if j is not None else (None, None)
+    n_now, n_then = (prof[i], prof[j]) if j is not None else (None, None)
+    margin_chg = (
+        n_now / s_now * 100 - n_then / s_then * 100
+        if None not in (n_now, n_then, s_now, s_then) and s_now > 0 and s_then > 0
+        else None
+    )
+    run: int | None = None
+    if j is not None and n_now is not None and n_then is not None:
+        run = 0
+        k = i
+        while k >= 0 and run < 4:
+            jk = _year_ago(dates, k)
+            if jk is None or prof[k] is None or prof[jk] is None or prof[k] >= prof[jk]:
+                break
+            run += 1
+            k -= 1
+    no_pair = None if j is not None else "no quarter a year earlier in the data"
+    return [
+        _m(
+            "q_sales_yoy",
+            "Revenue growth, latest quarter YoY",
+            pct(s_now, s_then),
+            "%",
+            f"sales, {vs}",
+            no_pair or (None if pct(s_now, s_then) is not None else "year-ago sales not positive"),
+        ),
+        _m(
+            "q_np_yoy",
+            "Net profit growth, latest quarter YoY",
+            pct(n_now, n_then),
+            "%",
+            f"net profit, {vs}",
+            no_pair or (None if pct(n_now, n_then) is not None else "year-ago profit not positive"),
+        ),
+        _m(
+            "q_npm_chg",
+            "Net margin change, latest quarter YoY",
+            margin_chg,
+            "pp",
+            f"net profit / sales, {vs}",
+            no_pair or (None if margin_chg is not None else "sales missing"),
+        ),
+        _m(
+            "q_np_down_run",
+            "Consecutive quarters of lower profit YoY",
+            run,
+            "count",
+            f"newest quarters whose net profit is below the same quarter a year earlier (max 4), to {when}",
+            no_pair,
+        ),
+    ]
 
 
 def compute(c: ScreenerCompany, profile: str = "standard") -> CompanyMetrics:
@@ -323,6 +407,8 @@ def compute(c: ScreenerCompany, profile: str = "standard") -> CompanyMetrics:
                 "fewer than 3 profitable years of price history, or no current P/E",
             )
         )
+
+    out.extend(quarterly_metrics(q))
 
     return CompanyMetrics(
         name=c.name,

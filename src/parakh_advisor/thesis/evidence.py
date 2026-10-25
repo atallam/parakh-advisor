@@ -33,7 +33,7 @@ def from_metrics(m: CompanyMetrics) -> list[Evidence]:
     for x in m.metrics:
         period = (
             f"{(m.quarter_end or as_of):%Y%m}"
-            if x.key in ("pe_ttm", "pe_vs_hist")
+            if x.key in ("pe_ttm", "pe_vs_hist") or x.key.startswith("q_")
             else f"{(m.fy_end or as_of):%Y%m}"
         )
         text = (

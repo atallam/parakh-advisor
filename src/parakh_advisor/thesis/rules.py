@@ -5,6 +5,8 @@ Nothing here calls an LLM. The agent proposes; these rules decide what is accept
 
 from __future__ import annotations
 
+import re
+
 from parakh_advisor.thesis.evidence import Evidence, latest_by_indicator
 from parakh_advisor.thesis.models import (
     Change,
@@ -268,3 +270,71 @@ def tighten_drivers(drivers: list[Driver], evidence: list[Evidence]) -> list[Dri
             )
         )
     return out
+
+
+QM_ID = re.compile(r"^QM\d+$")
+
+# (indicator, direction, warn line, adverse test, text). Deliberately blunt: a WATCH only stops adds
+# and asks for a look; one-offs (tax, write-downs) are for the reader to explain, not for code to guess.
+_QUARTER_CHECKS = [
+    (
+        "q_sales_yoy",
+        "gte",
+        0.0,
+        lambda v: v < 0,
+        "Revenue in the latest quarter should not fall year on year.",
+    ),
+    (
+        "q_np_yoy",
+        "gte",
+        -25.0,
+        lambda v: v < -25,
+        "Net profit in the latest quarter should not fall more than 25% year on year.",
+    ),
+    (
+        "q_npm_chg",
+        "gte",
+        -5.0,
+        lambda v: v < -5,
+        "Net margin in the latest quarter should not fall more than 5 points year on year.",
+    ),
+    (
+        "q_np_down_run",
+        "lte",
+        2.0,
+        lambda v: v > 2,
+        "Profit should not be lower than a year earlier for three quarters running.",
+    ),
+]
+
+
+def quarterly_drivers(drivers: list[Driver], evidence: list[Evidence]) -> list[Driver]:
+    """Code-owned monitors for the newest reported quarters. Unlike annual drivers they are not
+    frozen: they are rebuilt on every run from current evidence, appear only while a quarter is
+    adverse, and vanish when it recovers. They can only add a WATCH, never loosen a thesis, so the
+    pre-registration rule is not weakened. Ids are QM1.. so they can be told apart and replaced."""
+    ev = latest_by_indicator(evidence)
+    have = {d.indicator for d in drivers if d.indicator and not QM_ID.match(d.id)}
+    out: list[Driver] = []
+    for key, direction, warn, adverse, text in _QUARTER_CHECKS:
+        e = ev.get(key)
+        if e is None or e.value is None or key in have or not adverse(e.value):
+            continue
+        out.append(
+            Driver(
+                id=f"QM{len(out) + 1}",
+                statement=f"{text} (added by code: currently {e.value:g}.)",
+                kind="metric",
+                indicator=key,
+                direction=direction,
+                warn_threshold=warn,
+                break_threshold=None,
+                evidence_ids=[e.id],
+            )
+        )
+    return out
+
+
+def with_quarterly_drivers(drivers: list[Driver], evidence: list[Evidence]) -> list[Driver]:
+    kept = [d for d in drivers if not QM_ID.match(d.id)]
+    return kept + quarterly_drivers(kept, evidence)

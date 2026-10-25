@@ -123,6 +123,7 @@ def run(
     if prior is None or decision == ChangeDecision.REPLACE:
         drivers = rules.tighten_drivers(list(drivers), evidence)
         drivers = drivers + rules.hygiene_drivers(drivers, evidence, metrics.profile)
+    drivers = rules.with_quarterly_drivers(list(drivers), evidence)
     drivers, kills = rules.evaluate(list(drivers), list(kills), evidence)
     drivers, bad_flags = rules.apply_flags(drivers, resp.get("driver_flags", []), evidence)
     rejected = list(rejected) + bad_flags
