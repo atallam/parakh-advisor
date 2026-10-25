@@ -16,6 +16,7 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
+from parakh_advisor.clock import IST
 from parakh_advisor.thesis.evidence import Evidence
 
 PASSAGE_CHARS = 1100
@@ -34,7 +35,8 @@ def _doc_date(path: Path) -> date:
     m = re.match(r"(\d{4}-\d{2}-\d{2})", path.name)
     if m:
         return date.fromisoformat(m.group(1))
-    return datetime.fromtimestamp(path.stat().st_mtime).date()  # fallback: file date, less reliable
+    # fallback: the file's date in IST, less reliable than a date in the name
+    return datetime.fromtimestamp(path.stat().st_mtime, tz=IST).date()
 
 
 def split_passages(text: str, size: int = PASSAGE_CHARS) -> list[str]:

@@ -41,7 +41,7 @@ def _needs_cost(p: Position) -> bool:
     )
 
 
-def run_checks(
+def run_checks(  # noqa: C901
     positions: list[Position], raw_rows: list[dict[str, Any]], ref: date
 ) -> list[DQFlag]:
     flags: list[DQFlag] = []

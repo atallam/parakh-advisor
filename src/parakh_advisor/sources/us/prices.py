@@ -12,6 +12,7 @@ import time
 from datetime import UTC, date, datetime
 from pathlib import Path
 
+from parakh_advisor.clock import now_utc
 from parakh_advisor.sources.http import Fetcher, SourceError, get_json, http_get
 
 CHART_URL = (
@@ -29,10 +30,7 @@ class YahooPrices:
 
     def raw(self, ticker: str, max_age_days: int = 1) -> dict:
         path = self.cache / f"yahoo_{ticker.upper()}.json"
-        if (
-            path.exists()
-            and (datetime.now().timestamp() - path.stat().st_mtime) < max_age_days * 86400
-        ):
+        if path.exists() and (now_utc().timestamp() - path.stat().st_mtime) < max_age_days * 86400:
             return json.loads(path.read_text(encoding="utf-8"))
         data = self._download(ticker, path)
         self.cache.mkdir(parents=True, exist_ok=True)

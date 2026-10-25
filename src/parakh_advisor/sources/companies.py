@@ -43,14 +43,14 @@ def load_companies(
                 c = india.get(inst.screener.upper())
                 if c is None:
                     msg = f"{label}: no Screener export named '{inst.screener}' in {screener_dir}"
-                    print(f"  - {msg}", file=sys.stderr)
+                    print(f"  - {msg}", file=sys.stderr)  # noqa: T201
                     if failures is not None:
                         failures.append(msg)
                     continue
                 out[iid] = c
         except SourceError as exc:
             msg = f"{label}: fundamentals unavailable ({exc})"
-            print(f"  - {msg}", file=sys.stderr)
+            print(f"  - {msg}", file=sys.stderr)  # noqa: T201
             if failures is not None:
                 failures.append(msg)
     return out

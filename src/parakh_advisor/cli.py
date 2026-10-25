@@ -174,7 +174,7 @@ def cmd_thesis(args: argparse.Namespace) -> int:
     return 1 if failed else 0
 
 
-def cmd_advise(args: argparse.Namespace) -> int:
+def cmd_advise(args: argparse.Namespace) -> int:  # noqa: C901
     import json
 
     from dotenv import load_dotenv

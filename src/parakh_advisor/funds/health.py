@@ -180,7 +180,7 @@ def benchmark_key(category: str) -> str:
     return "smallcap" if "small cap" in category.lower() else "broad"
 
 
-def assess(
+def assess(  # noqa: C901
     code: str,
     name: str,
     category: str,

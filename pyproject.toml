@@ -18,7 +18,7 @@ dependencies = [
 parakh-advisor = "parakh_advisor.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8.3", "ruff>=0.6"]
+dev = ["pytest>=8.3", "ruff>=0.6", "pyright>=1.1.380", "pre-commit>=3.8"]
 
 [build-system]
 requires = ["hatchling>=1.25"]
@@ -36,5 +36,27 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
-ignore = ["E501"]  # the formatter owns line length
+select = ["E", "F", "I", "UP", "B", "DTZ", "T20", "BLE", "C901", "TID251"]
+ignore = [
+    "E501",   # the formatter owns line length
+    "DTZ007", # strptime(...).date() parses dates from filings; no timezone is meant
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/parakh_advisor/cli.py" = ["T20"]  # the CLI prints
+"src/parakh_advisor/llm/**" = ["TID251"]  # the provider-SDK boundary
+"tests/**" = ["DTZ", "T20", "TID251"]
+
+[tool.ruff.lint.mccabe]
+# why: ratchet. Functions above this carry a `# noqa: C901` marker (grep for it); lower the number
+# as they are split. New code must stay under it.
+max-complexity = 15
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"anthropic".msg = "The Anthropic SDK is imported only under src/parakh_advisor/llm/ (CLAUDE.md)."
+
+[tool.pyright]
+include = ["src"]
+typeCheckingMode = "basic"
+pythonVersion = "3.12"
+# Not in CI yet: 83 known errors (backlog: Engineering health). Run `uv run pyright` to see them.
