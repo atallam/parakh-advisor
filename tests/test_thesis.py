@@ -247,3 +247,37 @@ def test_store_uses_symbol_folder_and_migrates_legacy(tmp_path):
     assert not (tmp_path / "INE0HOQ01053").exists()
     assert s._dir("US:AMD") == tmp_path / "AMD"
     assert s._dir("UNKNOWN:1") == tmp_path / "UNKNOWN_1"
+
+
+def test_cut_off_reply_is_reported_not_parsed(monkeypatch):
+    import pytest
+
+    from parakh_advisor.llm.client import AnthropicLLM, LLMError
+
+    class Block:
+        type = "text"
+        text = '{"decision": "AMEND", "business_summary": "cut'
+
+    class Msg:
+        content = [Block()]
+        stop_reason = "max_tokens"
+
+    class Client:
+        class messages:  # noqa: N801
+            @staticmethod
+            def create(**kw):
+                return Msg()
+
+    llm = AnthropicLLM.__new__(AnthropicLLM)
+    llm.model, llm._client = "x", Client()
+    with pytest.raises(LLMError, match="cut off"):
+        llm.complete_json("s", "u", max_tokens=100)
+
+
+def test_parse_json_object_ignores_junk_after_the_object():
+    text = '{"action":"tool","tool":"get","args":{"id":"x"}}\n\n\n<invoke name="x">\n</invoke>'
+    assert parse_json_object(text)["tool"] == "get"
+    import pytest
+
+    with pytest.raises(LLMError):
+        parse_json_object('Sure! {"a": 1}')

@@ -13,7 +13,10 @@ Newest first. Every change to this folder is listed here, so you can see what mo
 - Wording fix: "no readable valuation" now says too little history, losses, or distorted earnings (it was "young or loss-making", wrong for HDFC Bank).
 - Transcript checks ported from the old Parakh: a download must look like a real concall (length, concall words, readable characters, normal word length), otherwise it is rejected with the reason and the next-older call is tried (up to 4 tries, 2 kept). If the newest call has no usable transcript the run says so ("treat the management commentary as stale"). Long transcripts keep the opening remarks and the whole Q&A.
 - `fetch-docs --browser-headers` (off by default): sends browser-style headers for India document downloads only, for when the exchange refuses the default request. Never used for SEC EDGAR or the Screener page.
-- Tests: 124 passing.
+- Fix: thesis replies were capped at 3000 tokens, so a long AMEND (full thesis plus verbatim quotes from the new filings) was cut off mid-sentence and failed as "invalid JSON" (NVDA, META, GOOGL). The cap for theses is now 8000, and a cut-off reply is reported as such.
+- Fix: the model sometimes appends stray text (empty tool-call tags) after a valid JSON reply; that failed NVDA's Skeptic step. The reader now takes the first complete JSON object and ignores what follows (text before the object is still an error).
+- Fix: US filings were not being found for AMD (and by extension most US names). The exhibit is now found by the type the filing's own index page gives it (EX-99.1) instead of by file name (AMD calls it `q22026991.htm`), and the 10-Q/10-K MD&A heading now tolerates table bars and curly apostrophes ("ITEM 2. | MANAGEMENT'S"). Checked live: AMD, META, NVDA, TSLA, SOFI, ELF, AMZN and GOOGL each return 3 earnings releases and the latest MD&A.
+- Tests: 129 passing.
 
 ## 2026-10-24 - Day 9b: JioBlackRock Flexi Cap portfolio file
 - Added your JioBlackRock Flexi Cap Fund September 2026 portfolio (138 equity lines, 97.84% of the fund) to `data\inbox\funds`.

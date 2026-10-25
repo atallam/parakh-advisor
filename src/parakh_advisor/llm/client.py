@@ -22,11 +22,13 @@ class LLM(Protocol):
 
 
 def parse_json_object(text: str) -> dict:
-    """Accept a bare object or one wrapped in a code fence. Anything else is an error."""
+    """Accept a bare object or one wrapped in a code fence, ignoring junk after it. Else an error."""
     s = text.strip()
     s = re.sub(r"^```(?:json)?\s*|\s*```$", "", s)
     try:
-        obj = json.loads(s)
+        # The reply must START with the object. Stray text after it (the model sometimes appends
+        # junk such as empty tool-call tags) is ignored; text before it is still an error.
+        obj, _end = json.JSONDecoder().raw_decode(s)
     except json.JSONDecodeError as exc:
         raise LLMError(
             f"model did not return valid JSON: {exc}; first 200 chars: {s[:200]!r}"
@@ -69,6 +71,10 @@ class AnthropicLLM:
         except Exception as exc:  # network, auth, rate limit: surface, do not hide
             raise LLMError(f"Anthropic call failed: {exc}") from exc
         text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
+        if getattr(msg, "stop_reason", None) == "max_tokens":
+            raise LLMError(
+                f"the reply was cut off at {max_tokens} tokens (limit too low for this input)"
+            )
         return parse_json_object(text)
 
 

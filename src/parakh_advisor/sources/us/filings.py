@@ -20,6 +20,7 @@ from parakh_advisor.sources.us.edgar import Edgar
 
 SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 INDEX_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc}/index.json"
+PAGE_INDEX_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc}/{dashed}-index.html"
 DOC_URL = "https://www.sec.gov/Archives/edgar/data/{cik}/{acc}/{name}"
 EXHIBIT_99 = re.compile(r"(ex[-_]?99|exhibit[-_]?99)", re.I)
 
@@ -40,16 +41,19 @@ class FetchedDoc:
     ref: str  # short stable id used in the file name and to skip documents already fetched
 
 
+SEP = r"[\s.|:\-\u2013\u2014]*"  # between "Item 2" and its title: dots, table bars, dashes
+
+
 def _mda_patterns(form: str) -> tuple[str, str]:
     """(start, end) regex for the MD&A heading of a 10-Q (item 2) or a 10-K (item 7)."""
     if form == "10-K":
         return (
-            r"item\s*7\.?\s*management's\s+discussion\s+and\s+analysis",
-            r"item\s*7a\.?\s*quantitative|item\s*8\.?\s*financial\s+statements",
+            rf"item\s*7{SEP}management's\s+discussion\s+and\s+analysis",
+            rf"item\s*7a{SEP}quantitative|item\s*8{SEP}financial\s+statements",
         )
     return (
-        r"item\s*2\.?\s*management's\s+discussion\s+and\s+analysis",
-        r"item\s*3\.?\s*quantitative|item\s*4\.?\s*controls",
+        rf"item\s*2{SEP}management's\s+discussion\s+and\s+analysis",
+        rf"item\s*3{SEP}quantitative|item\s*4{SEP}controls",
     )
 
 
@@ -105,7 +109,19 @@ class EdgarFilings:
         periodic.sort(key=lambda x: x["filingDate"], reverse=True)
         return releases[:MAX_RELEASES], (periodic[0] if periodic else None)
 
-    def _exhibit_name(self, cik: int, acc_nodash: str) -> str | None:
+    def _exhibit_name(self, cik: int, acc_nodash: str, acc_dashed: str = "") -> str | None:
+        """The EX-99.1 document. The filing's index page labels each document's type; file names alone
+        are unreliable (AMD calls it q22026991.htm). Falls back to a file-name pattern."""
+        if acc_dashed:
+            try:
+                page = self.fetch(PAGE_INDEX_URL.format(cik=cik, acc=acc_nodash, dashed=acc_dashed))
+                for row in re.split(r"<tr\b", page.decode("utf-8", "replace")):
+                    if re.search(r">\s*EX-99\.1\s*</td>\s*<td[^>]*>\s*[\d,]*\s*</td>", row):
+                        link = re.search(r'href="[^"]*/([^"/]+\.html?)"', row)
+                        if link:
+                            return link.group(1)
+            except SourceError:
+                pass
         idx = json.loads(self.fetch(INDEX_URL.format(cik=cik, acc=acc_nodash)))
         names = [i["name"] for i in idx.get("directory", {}).get("item", [])]
         hits = [n for n in names if EXHIBIT_99.search(n) and n.lower().endswith((".htm", ".html"))]
@@ -123,7 +139,7 @@ class EdgarFilings:
         for x in releases:
             acc = x["accessionNumber"].replace("-", "")
             try:
-                name = self._exhibit_name(cik, acc)
+                name = self._exhibit_name(cik, acc, x["accessionNumber"])
                 if not name:
                     notes.append(f"{x['filingDate']} 8-K: no exhibit 99 found")
                     continue

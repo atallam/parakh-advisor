@@ -20,6 +20,7 @@ from parakh_advisor.thesis.models import (
 )
 
 PROMPT_VERSION = "thesis_analyst@1"
+THESIS_MAX_TOKENS = 8000  # an AMEND restates the whole thesis with verbatim quotes; 3000 cut it off
 _PROMPT = (Path(__file__).parent / "prompts" / "thesis_analyst_v1.md").read_text(encoding="utf-8")
 
 
@@ -58,7 +59,9 @@ def run(
     if not evidence:
         raise LLMError(f"{name}: no evidence available (no metrics); cannot write a thesis")
     valid = {e.id for e in evidence}
-    resp = llm.complete_json(_PROMPT, _user_message(name, sector, evidence, prior))
+    resp = llm.complete_json(
+        _PROMPT, _user_message(name, sector, evidence, prior), max_tokens=THESIS_MAX_TOKENS
+    )
     data_date = max(e.as_of for e in evidence)
     dig = digest(evidence)
     version = (prior.version + 1) if prior else 1
