@@ -1,0 +1,23 @@
+# Peer groups for sector percentiles. A holding joins one with `peer_group: <name>` in instruments.yaml.
+# US groups: tickers; fundamentals from SEC EDGAR, price from Yahoo. These are STARTER lists: edit freely.
+# India groups: save Screener exports (Export to Excel) for 8 to 12 closest peers into the folder; the group
+#   is ignored with a message until the folder exists. Example, not active:
+#   in_autos: {market: IN, dir: data/inbox/peers/in_autos}
+# Quote tickers that YAML reads as yes/no ("ON", "NO", "Y", "N"). A holding is never ranked against itself. Fewer than 5 usable peers gives no percentile.
+# profile: standard | bank (banks are ranked on growth, profit growth and ROE only).
+semis:
+  market: US
+  members: [AMD, NVDA, AVGO, QCOM, TXN, MU, INTC, AMAT, LRCX, ADI, KLAC, MRVL, "ON"]
+megacap_tech:
+  market: US
+  members: [META, GOOGL, AMZN, MSFT, AAPL, NFLX, PINS, SNAP, UBER, ORCL, ADBE, CRM]
+autos_and_parts:
+  market: US
+  members: [TSLA, F, GM, RIVN, LCID, APTV, LEA, BWA, HOG]
+beauty_and_care:
+  market: US
+  members: [ELF, EL, COTY, ULTA, IPAR, OLPX, CLX, CHD, PG, HELE]
+consumer_lenders:
+  market: US
+  profile: bank
+  members: [SOFI, LC, UPST, AFRM, COF, SYF, ALLY, AXP, SCHW]

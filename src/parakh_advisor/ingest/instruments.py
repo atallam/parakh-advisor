@@ -17,6 +17,7 @@ class Instrument(BaseModel):
     conviction: str = "unset"  # core | standard | starter | tracking: yours to set. Unset = no position-size advice, only the concentration cap applies
     valuation_history_reliable: bool = True
     screener_code: str | None = None  # Screener URL code when it differs from the symbol, e.g. M&M
+    peer_group: str | None = None  # name of a group in config/peers.yaml
     acknowledge: list[str] = []  # data-quality codes you have checked and accept, e.g. ["DQ-04"]
 
 

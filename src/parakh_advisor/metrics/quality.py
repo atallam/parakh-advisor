@@ -16,6 +16,7 @@ from datetime import date
 
 from pydantic import BaseModel
 
+from parakh_advisor.metrics import rdcf
 from parakh_advisor.sources.india.screener_export import ScreenerCompany, Table
 
 
@@ -407,6 +408,53 @@ def compute(c: ScreenerCompany, profile: str = "standard") -> CompanyMetrics:
                 "fewer than 3 profitable years of price history, or no current P/E",
             )
         )
+
+    # reverse DCF: the growth today's value asks for, against what the company has delivered
+    mkt = rdcf.market_of(c.money_unit)
+    r, tg = rdcf.RATES[mkt]
+    base, base_name = rdcf.profit_base(_last(np_), ttm)
+    ref = _cagr(np_, 3)
+    ref_src = "3y profit growth"
+    if ref is None:
+        ref, ref_src = _cagr(sales, 3), "3y revenue growth"
+    assume = f"{r:.0%} discount, {tg:.0%} terminal, {rdcf.YEARS} years, profit as the cash proxy"
+    if mcap and base:
+        g, edge = rdcf.implied_growth(mcap, base, r, tg)
+        shown = round(g * 100, 2)
+        edge_note = {
+            "low": "market value is below even steep decline; the figure is the search limit",
+            "high": "market value needs more than the search limit; the figure is the limit",
+        }.get(edge or "")
+        out.append(
+            _m(
+                "rdcf_growth",
+                "Growth implied by market value (10y)",
+                shown,
+                "%",
+                f"yearly profit growth that justifies today's value ({assume}); base: {base_name}",
+                edge_note,
+            )
+        )
+        capped = None if ref is None else min(ref, rdcf.REFERENCE_CAP)
+        out.append(
+            _m(
+                "rdcf_gap",
+                "Implied growth minus delivered growth",
+                None if capped is None else shown - capped,
+                "pp",
+                f"implied growth less {ref_src}"
+                + (
+                    ""
+                    if ref is None or ref <= rdcf.REFERENCE_CAP
+                    else f" (past growth capped at {rdcf.REFERENCE_CAP:g}%)"
+                ),
+                None if capped is not None else "no usable past growth to compare with",
+            )
+        )
+    else:
+        why = base_name if not base else "no market value"
+        out.append(_na("rdcf_growth", "Growth implied by market value (10y)", "%", why))
+        out.append(_na("rdcf_gap", "Implied growth minus delivered growth", "pp", why))
 
     out.extend(quarterly_metrics(q))
 

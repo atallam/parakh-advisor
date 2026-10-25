@@ -14,11 +14,13 @@ from parakh_advisor.ingest.instruments import acknowledged_flags, load_instrumen
 from parakh_advisor.ingest.normalise import build_portfolio
 from parakh_advisor.ingest.wealthlens_json import ExportError, load_rows
 from parakh_advisor.llm.client import AnthropicLLM, LLMError
+from parakh_advisor.metrics.peers import sector_context
 from parakh_advisor.metrics.quality import compute
 from parakh_advisor.report.html import render_snapshot
 from parakh_advisor.research.documents import load_documents
 from parakh_advisor.sources.companies import load_companies
 from parakh_advisor.sources.funds.mfapi import MfapiResolver
+from parakh_advisor.sources.peers import PeerLoader, load_peer_groups
 from parakh_advisor.thesis.evidence import from_metrics
 from parakh_advisor.thesis.store import ThesisStore
 
@@ -112,6 +114,7 @@ def cmd_thesis(args: argparse.Namespace) -> int:
         if isin in companies
     }
     cohort = {m.name: from_metrics(m) for m in all_metrics.values()}
+    loader = PeerLoader({} if args.no_peers else load_peer_groups(args.peers), args.cache)
     for isin, inst in instruments.items():
         if args.only and args.only.upper() not in (inst.symbol or "").upper():
             continue
@@ -120,11 +123,23 @@ def cmd_thesis(args: argparse.Namespace) -> int:
             print(f"  - {inst.symbol or isin}: no fundamentals loaded, skipped")
             continue
         prior = store.latest(isin)
+        ctx = None
+        if inst.peer_group and loader.groups:
+            peers = loader.peers_of(
+                inst.peer_group, {inst.edgar or "", (inst.screener or "").upper()}
+            )
+            ctx = sector_context(inst.peer_group, m, peers, inst.profile)
+            shown = (
+                f"quality percentile {ctx.quality_pct:.0f}"
+                if ctx.quality_pct is not None
+                else ctx.note
+            )
+            print(f"  - {inst.symbol}: peers '{inst.peer_group}' ({ctx.peers}): {shown}")
         docs = load_documents(args.research, inst.symbol or isin)
         t, note, last = None, "", None
         for attempt in range(1, 4):  # model output is occasionally malformed; try up to 3 times
             try:
-                t = thesis_analyst.run(llm, isin, m.name, inst.sector, m, prior, docs)
+                t = thesis_analyst.run(llm, isin, m.name, inst.sector, m, prior, docs, ctx)
                 note = ""
                 if prior is not None and prior.inputs_digest == t.inputs_digest:
                     t = t.model_copy(update={"skeptic_counter_case": prior.skeptic_counter_case})
@@ -355,6 +370,10 @@ def main(argv: list[str] | None = None) -> int:
         "--input", default="data/inbox/holdings.json", help="WealthLens export (gives US prices)"
     )
     th.add_argument("--cache", default="data/cache")
+    th.add_argument(
+        "--peers", default="config/peers.yaml", help="Peer groups for sector percentiles"
+    )
+    th.add_argument("--no-peers", action="store_true", help="Skip sector percentiles")
     th.add_argument("--no-skeptic", action="store_true", help="Skip the Skeptic (saves LLM calls)")
     th.add_argument("--only", help="Only symbols containing this text, e.g. HDFC")
     th.set_defaults(func=cmd_thesis)

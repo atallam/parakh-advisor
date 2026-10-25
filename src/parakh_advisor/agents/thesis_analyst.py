@@ -7,6 +7,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from parakh_advisor.llm.client import LLM, LLMError
+from parakh_advisor.metrics.peers import SectorContext, to_evidence
 from parakh_advisor.metrics.quality import CompanyMetrics
 from parakh_advisor.thesis import rules
 from parakh_advisor.thesis.evidence import Evidence, digest, from_metrics
@@ -54,8 +55,11 @@ def run(
     metrics: CompanyMetrics,
     prior: Thesis | None,
     documents: list[Evidence] | None = None,
+    peer_ctx: SectorContext | None = None,
 ) -> Thesis:
     evidence = from_metrics(metrics) + list(documents or [])
+    if peer_ctx is not None and (metrics.quarter_end or metrics.fy_end):
+        evidence += to_evidence(peer_ctx, metrics.quarter_end or metrics.fy_end)
     if not evidence:
         raise LLMError(f"{name}: no evidence available (no metrics); cannot write a thesis")
     valid = {e.id for e in evidence}
@@ -131,6 +135,7 @@ def run(
         drivers,
         kills,
         metrics.quarters_reported,
+        top_third=peer_ctx is not None and peer_ctx.top_third,
         # a filing counts as a source only if it is not stale (about 13 months) next to the newest evidence
         sourced=any(e.kind != "metric" and (data_date - e.as_of).days <= 400 for e in evidence),
         no_earnings_record=(

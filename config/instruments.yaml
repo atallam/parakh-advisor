@@ -2,6 +2,7 @@
 # screener: company name as it appears in the Screener export (matched case-insensitively).
 # conviction: core | standard | starter | tracking (default unset: no size advice). Only core/standard can ever be advised ADD.
 # valuation_history_reliable: false when own-history P/E is distorted (e.g. HDFC Bank after its 2023 merger).
+# peer_group: name of a group in config/peers.yaml (sector percentiles).
 # acknowledge: data-quality codes you have checked and accept, e.g. acknowledge: [DQ-04]. Shown once as accepted, not as a warning.
 # profile : standard | bank | airline_lease  (decides which ratios are meaningful)
 INE040A01034: {symbol: HDFCBANK, screener: HDFC BANK LTD, sector: Banks, profile: bank, valuation_history_reliable: false, conviction: standard}
@@ -16,11 +17,11 @@ INE12UN01015: {symbol: SHADOWFAX, screener: SHADOWFAX TECHNOLOGIES LTD, sector: 
 INE0HOQ01053: {symbol: GROWW, screener: BILLIONBRAINS GARAGE VENTURES LTD, sector: Brokerage and wealth platforms, profile: broker, conviction: core}
 INE0LEZ01016: {symbol: ATHERENERG, screener: ATHER ENERGY LTD, sector: Automobiles, profile: standard, conviction: core}
 # US stocks: fundamentals from SEC EDGAR (ticker), price from your WealthLens export.
-US:AMD: {symbol: AMD, edgar: AMD, sector: Semiconductors, profile: standard, conviction: core}
-US:NVDA: {symbol: NVDA, edgar: NVDA, sector: Semiconductors, profile: standard, conviction: core}
-US:META: {symbol: META, edgar: META, sector: Internet platforms, profile: standard, conviction: core}
-US:GOOGL: {symbol: GOOGL, edgar: GOOGL, sector: Internet platforms, profile: standard,conviction: standard}
-US:AMZN: {symbol: AMZN, edgar: AMZN, sector: E-commerce and cloud, profile: standard,conviction: core}
-US:TSLA: {symbol: TSLA, edgar: TSLA, sector: Automobiles, profile: standard,conviction: standard, acknowledge: [DQ-04]}
-US:ELF: {symbol: ELF, edgar: ELF, sector: Cosmetics, profile: standard, conviction: starter}
-US:SOFI: {symbol: SOFI, edgar: SOFI, sector: Fintech and banking, profile: bank,conviction: tracking}
+US:AMD: {symbol: AMD, edgar: AMD, peer_group: semis, sector: Semiconductors, profile: standard, conviction: core}
+US:NVDA: {symbol: NVDA, edgar: NVDA, peer_group: semis, sector: Semiconductors, profile: standard, conviction: core}
+US:META: {symbol: META, edgar: META, peer_group: megacap_tech, sector: Internet platforms, profile: standard, conviction: core}
+US:GOOGL: {symbol: GOOGL, edgar: GOOGL, peer_group: megacap_tech, sector: Internet platforms, profile: standard,conviction: standard}
+US:AMZN: {symbol: AMZN, edgar: AMZN, peer_group: megacap_tech, sector: E-commerce and cloud, profile: standard,conviction: core}
+US:TSLA: {symbol: TSLA, edgar: TSLA, peer_group: autos_and_parts, sector: Automobiles, profile: standard,conviction: standard, acknowledge: [DQ-04]}
+US:ELF: {symbol: ELF, edgar: ELF, peer_group: beauty_and_care, sector: Cosmetics, profile: standard, conviction: starter}
+US:SOFI: {symbol: SOFI, edgar: SOFI, peer_group: consumer_lenders, sector: Fintech and banking, profile: bank,conviction: tracking}

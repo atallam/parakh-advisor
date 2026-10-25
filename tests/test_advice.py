@@ -69,6 +69,8 @@ def test_valuation_bands_and_unreliable_history():
         def get(self, k):
             from parakh_advisor.metrics.quality import Metric
 
+            if k.startswith("rdcf"):
+                return None  # history-only case; the reverse DCF has its own tests
             return Metric(key=k, label=k, value=self.v, unit="%", basis="b")
 
     assert valuation_stance(M(-30))[0] == "CHEAP"
