@@ -299,6 +299,13 @@ _QUARTER_CHECKS = [
         "Net margin in the latest quarter should not fall more than 5 points year on year.",
     ),
     (
+        "q_np_vs_med4",
+        "gte",
+        -40.0,
+        lambda v: v < -40,
+        "Net profit in the latest quarter should not be more than 40% below the median of the previous four quarters.",
+    ),
+    (
         "q_np_down_run",
         "lte",
         2.0,

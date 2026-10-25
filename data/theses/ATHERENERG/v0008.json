@@ -1,0 +1,146 @@
+{
+  "instrument_id": "INE0LEZ01016",
+  "version": 8,
+  "as_of_data_date": "2026-08-31",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:f75743946bcc79b7622dcfa535717e12de536905c759671eb303e64df6456102",
+  "business_summary": "Ather Energy is an automobiles company. Revenue grew 27.28% a year over three years to FY26, but the company is loss-making. FY26 net profit was -517.17 Rs cr, and all of the last four quarters were losses. Operating margin is -11.12%, and debt/equity is 0.26x.",
+  "why_own": "The case rests on revenue growing at a healthy rate while operating losses narrow, with operating margin up 28.61 pp over three years. Evidence is thin: the company is loss-making, there are no profit-based valuation or return metrics, and no investor documents were supplied, so the drivers below are metric-only.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a healthy double-digit rate (3-year CAGR was 27.28% to FY26).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 20.0,
+      "break_threshold": 12.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating losses keep narrowing toward breakeven. Operating margin is -11.12%, after improving 28.61 pp over three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": -15.0,
+      "break_threshold": -20.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "The balance sheet stays lightly leveraged while the company is loss-making (debt/equity is 0.26x). (warn line tightened by code from 0.5 to 0.34.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.34,
+      "break_threshold": 0.8,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Interest cover should stay above 1.5x. (added by code: currently -5.29.)",
+      "kind": "metric",
+      "indicator": "int_cover",
+      "direction": "gte",
+      "warn_threshold": 1.5,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.int_cover@202603"
+      ]
+    },
+    {
+      "id": "H2",
+      "statement": "Trailing four-quarter net profit should not be negative. (added by code: currently -389.84.)",
+      "kind": "metric",
+      "indicator": "np_ttm",
+      "direction": "gte",
+      "warn_threshold": 0.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.np_ttm@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin deteriorates materially below the current -11.12%, so losses are widening instead of narrowing.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": -25.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Revenue growth slows sharply, undermining the growth case that justifies the current losses.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 10.0,
+      "tripped": false
+    },
+    {
+      "id": "K3",
+      "description": "Leverage rises to a level that is risky for a company with negative interest cover.",
+      "indicator": "debt_equity",
+      "op": ">",
+      "threshold": 1.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "The company is loss-making: FY26 net profit was -517.17 Rs cr, trailing four-quarter net profit was -389.84 Rs cr, and all of the last four quarters were losses.",
+      "evidence_ids": [
+        "MET.np_fy@202603",
+        "MET.np_ttm@202603",
+        "MET.loss_quarters_4@202603"
+      ]
+    },
+    {
+      "statement": "Returns and debt servicing are negative: ROCE is -13.44% and interest cover is -5.29x. ROE and cash flow/profit cannot be measured because profit is not positive.",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.int_cover@202603",
+        "MET.roe@202603",
+        "MET.cfo_np@202603"
+      ]
+    },
+    {
+      "statement": "The stock trades at 22.03x book value with no positive earnings to anchor valuation. P/E and P/E versus history cannot be computed, so the price depends on future profitability that is not yet shown.",
+      "evidence_ids": [
+        "MET.pb@202603",
+        "MET.pe_ttm@202606",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "The 5-year revenue CAGR of 115.07% is much higher than the 3-year CAGR of 27.28%, so growth has slowed over the longer window. The reason for the gap is untested here.",
+      "evidence_ids": [
+        "MET.rev_cagr_5@202603",
+        "MET.rev_cagr_3@202603"
+      ]
+    }
+  ],
+  "stance": "INSUFFICIENT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis needs growth to stay strong while losses narrow, but its tripwires are loose. Operating margin is -11.12%, yet the kill line is -25%, so margin could more than double its loss before K1 trips. The growth kill line (3-year CAGR below 10%) sits far below the 27.28% delivered. Meanwhile interest cover is -5.29x, ROCE is -13.44%, and the trailing four quarters lost 389.84 Rs cr. The stock trades at 22.03x book with no earnings to anchor it. The thesis is wrong if growth slows toward the low teens, or margins stall near -15% to -20%, while the valuation still assumes profitability that has not appeared. What would change this view: Two or more consecutive quarters of positive operating profit with interest cover above 1.5x, alongside revenue growth staying above about 20%, would remove my objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

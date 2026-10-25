@@ -1,0 +1,132 @@
+{
+  "instrument_id": "INE12UN01015",
+  "version": 8,
+  "as_of_data_date": "2026-08-31",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:0dd3e2f57be40e1734de776e765bd72270d4c5496bded7f86abe5b0e8561ba07",
+  "business_summary": "Logistics company. The evidence supplied covers financials only, not business lines. Revenue has compounded about 42% a year over three years. FY26 operating margin was 5.24% and net profit Rs 115.18 crore, positive in each of the last 4 quarters. Borrowings are low at 0.13x equity.",
+  "why_own": "The case rests on fast revenue growth (42.33% 3-year CAGR) combined with an operating margin that has risen 12.83 percentage points in three years to 5.24%, with low leverage. The evidence is thin: profit growth is undefined, there is little profitable history, no valuation comparison against its own past exists, and no company documents were supplied, so no qualitative drivers are written.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a high rate; 3-year revenue CAGR stays well above 25%. (warn line tightened by code from 25 to 29.63.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 29.63,
+      "break_threshold": 15.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds its recent improvement and stays positive, with the current 5.24% not eroding.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 4.0,
+      "break_threshold": 2.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital improve or at least hold; ROCE is 7.18% today and should not fall further.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 6.0,
+      "break_threshold": 3.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Balance sheet stays lightly geared; debt/equity remains low (0.13x now). (warn line tightened by code from 0.5 to 0.17.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.17,
+      "break_threshold": 1.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Trailing P/E should stay below 60x, or the price needs years of flawless growth. (added by code: currently 94.2.)",
+      "kind": "metric",
+      "indicator": "pe_ttm",
+      "direction": "lte",
+      "warn_threshold": 60.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.pe_ttm@202606"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 1%, erasing the margin improvement the thesis relies on.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 1.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Debt/equity rises above 1.0x, a sharp change from the current low leverage.",
+      "indicator": "debt_equity",
+      "op": ">",
+      "threshold": 1.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is demanding: P/E on trailing 4 quarters is 94.2x and price/book is 9.28x, which leaves little room if growth or margins disappoint.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202603"
+      ]
+    },
+    {
+      "statement": "Profitability is recent and thin: operating margin is 5.24%, ROCE 7.18% and ROE 10.72%, and 3-year profit growth is undefined. A comparison of P/E with its own 5-year median is not available. The track record is short and the cause of the margin change is untested here.",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.roce@202603",
+        "MET.roe@202603",
+        "MET.np_cagr_3@202603",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Earnings quality is hard to read: cash from operations was 2.97x FY26 net profit, and FY26 net profit (Rs 115.18 crore) is well below the trailing 4-quarter figure (Rs 172.23 crore). Neither gap is explained by the evidence, so both are untested.",
+      "evidence_ids": [
+        "MET.cfo_np@202603",
+        "MET.np_fy@202603",
+        "MET.np_ttm@202603"
+      ]
+    }
+  ],
+  "stance": "INSUFFICIENT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis is wrong if the margin gain is a recent, fragile event and not durable economics. Price is 94.2x trailing earnings and 9.28x book. A reverse DCF needs about 43.9% yearly profit growth for 10 years, while ROCE is only 7.18%. The margin gain has a short history and its cause is untested. FY26 profit (Rs 115 cr) trails the trailing-4-quarter figure (Rs 172 cr), and cash flow is 2.97x profit, neither explained. The guardrails are loose. Margin can fall from 5.24% to 1% before the kill criterion trips, and the P/E driver has no break line. The thesis is already marked INSUFFICIENT. What would change this view: Several more profitable quarters in which operating margin holds at or above about 5%, with FY26 and trailing profit reconciled and ROCE rising toward the discount rate, would make me drop the objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

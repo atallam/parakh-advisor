@@ -1,0 +1,117 @@
+{
+  "instrument_id": "INE0HOQ01053",
+  "version": 8,
+  "as_of_data_date": "2026-10-25",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:ab8aa6f13bbaa1dce2b3ae230792e1f9041651698a034d0168c21c73dd74f0ee",
+  "business_summary": "Billionbrains Garage Ventures operates in the brokerage and wealth platforms sector. In FY26 it reported net profit of Rs 2,083 crore on an operating margin of about 59%. Borrowings are minimal, at 0.03 times equity. Revenue has grown at a 3-year CAGR of about 60%.",
+  "why_own": "The case rests on very fast revenue and profit growth combined with a high operating margin, a 28.8% ROCE and almost no debt, all of which can be tested each quarter. The evidence is thin: there is no 5-year growth figure and no history of the P/E against its own past, and operating cash flow was roughly zero against FY26 profit.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding quickly: 3-year revenue CAGR was 59.64% to FY26, and it should stay well above the pace of a mature business. (warn line tightened by code from 30 to 41.75.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 41.75,
+      "break_threshold": 15.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.np_cagr_3@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "The operating margin stays high. It was 59.08% in FY26, up 24.14 percentage points over three years, and the thesis needs most of that gain to hold.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 50.0,
+      "break_threshold": 40.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay strong. ROCE was 28.84% and ROE 28.81% in FY26, and growth should not be coming at the cost of falling returns.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 22.0,
+      "break_threshold": 15.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays nearly debt-free. Debt/equity was 0.03x and interest cover 62.42x in FY26. (warn line tightened by code from 0.3 to 0.04.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.04,
+      "break_threshold": 0.6,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 35%, which would undo much of the three-year margin gain.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 35.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "ROCE falls below 12%, which would end the high-returns case.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 12.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Cash from operations was about zero against FY26 net profit (cash flow/profit of -0.01x), so reported profit is not yet turning into operating cash. The reason is untested with the evidence provided.",
+      "evidence_ids": [
+        "MET.cfo_np@202603",
+        "MET.np_fy@202603"
+      ]
+    },
+    {
+      "statement": "The valuation is demanding, at 43.56x trailing earnings and 12.16x book. There is no comparison with its own P/E history, so a slowdown in growth or margins could hit the share price hard.",
+      "evidence_ids": [
+        "MET.pe_ttm@202609",
+        "MET.pb@202603",
+        "MET.pe_vs_hist@202609"
+      ]
+    },
+    {
+      "statement": "The track record is short. The 5-year revenue CAGR cannot be computed, and the 3-year growth and margin gains may not repeat from the current higher base.",
+      "evidence_ids": [
+        "MET.rev_cagr_5@202603",
+        "MET.rev_cagr_3@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis would be wrong if FY26 profit is not converting to cash and growth keeps slowing toward what the price already assumes. Operating cash flow was about zero against Rs 2,083 cr of profit, and the cause is untested. Quarterly revenue growth of 47.39% is below the 3-year pace of 59.64% and only about 5.6 points above the D1 warn line. The market implies about 30% yearly profit growth for 10 years at 43.56x earnings. The margin kill line of 35% only fires after the full 24-point three-year gain is erased, and the ROCE kill line of 12% only after returns fall by more than half. What would change this view: Reported operating cash flow that is positive and reasonably close to net profit in the next fiscal year, with a stated reason for the FY26 gap, while quarterly revenue growth stays above 41.75%.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

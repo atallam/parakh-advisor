@@ -1,0 +1,71 @@
+{
+  "advisory_actions": {
+    "action": "str",
+    "band_high": "float",
+    "band_low": "float",
+    "created_at": "str",
+    "id": "str",
+    "instrument_id": "str",
+    "reason_codes": "list",
+    "run_id": "str",
+    "symbol": "str",
+    "user_id": "str",
+    "weight_pct": "float",
+    "what_would_change": "str"
+  },
+  "advisory_alerts": {
+    "acknowledged_at": "NoneType",
+    "created_at": "str",
+    "detail": "str",
+    "evidence_ids": "list",
+    "id": "str",
+    "instrument_id": "str",
+    "kind": "str",
+    "new_value": "NoneType",
+    "prev_value": "NoneType",
+    "run_id": "str",
+    "severity": "str",
+    "title": "str",
+    "user_id": "str"
+  },
+  "advisory_drivers": {
+    "driver_id": "str",
+    "evidence_ids": "list",
+    "indicator": "str",
+    "kind": "str",
+    "status": "str",
+    "thesis_id": "str",
+    "user_id": "str",
+    "value": "float"
+  },
+  "advisory_portfolio": {
+    "run_id": "str",
+    "snapshot": "dict",
+    "user_id": "str"
+  },
+  "advisory_runs": {
+    "contract": "str",
+    "finished_at": "str",
+    "id": "str",
+    "kind": "str",
+    "model": "str",
+    "policy_version": "int",
+    "started_at": "str",
+    "status": "str",
+    "user_id": "str"
+  },
+  "advisory_theses": {
+    "body": "dict",
+    "change_decision": "str",
+    "confidence": "str",
+    "created_at": "str",
+    "id": "str",
+    "inputs_digest": "str",
+    "instrument_id": "str",
+    "stance": "str",
+    "symbol": "str",
+    "user_id": "str",
+    "valuation_stance": "str",
+    "version": "int"
+  }
+}

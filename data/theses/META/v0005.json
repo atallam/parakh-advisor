@@ -1,0 +1,140 @@
+{
+  "instrument_id": "US:META",
+  "version": 5,
+  "as_of_data_date": "2026-10-22",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:5e6077ccb43845e5487827e8757b976f2c8225b64a6b30b42fc386c4043fd38c",
+  "business_summary": "Meta Platforms is an internet platforms company that earns substantially all its revenue from advertising on Facebook and Instagram, with Family daily active people of 3.64 billion. Reality Labs, its hardware and AR/VR segment, runs large losses. Revenue grew 19.89% a year over three years to FY25, and the FY25 operating margin was 50.7%.",
+  "why_own": "The case rests on fast revenue growth (19.89% a year over 3 years) converting into very high profitability (50.7% operating margin, 31.56% ROCE) with cash profit well above reported profit (1.92x). The valuation (23.74x trailing earnings, 8.22x book) already reflects much of this, and the Q3 2026 documents show a 20% operating margin after a $9.89 billion legal charge and 2026 capex guided to $135-145 billion, so the thesis depends on growth and margins holding.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate; the 3-year CAGR is 19.89% today. (warn line tightened by code from 12 to 13.92.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 13.92,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin stays near its current 50.7% level after expanding 18.43 percentage points over three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 40.0,
+      "break_threshold": 32.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay high; ROCE is 31.56% and ROE is 30.24%. (warn line tightened by code from 22 to 22.09.)",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 22.09,
+      "break_threshold": 15.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Reported profit is backed by cash; operating cash flow is 1.92 times net profit. (warn line tightened by code from 1.2 to 1.34.)",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 1.34,
+      "break_threshold": 0.9,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 30%, which would undo most of the three-year margin expansion.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 30.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "3-year revenue CAGR falls below 7%, a sharp slowdown from 19.89% today.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 7.0,
+      "tripped": false
+    },
+    {
+      "id": "K3",
+      "description": "Debt to equity rises above 1.0x, well beyond today's 0.27x.",
+      "indicator": "debt_equity",
+      "op": ">",
+      "threshold": 1.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation leaves limited room for disappointment: the stock trades at 23.74x trailing earnings and 8.22x book. The trailing P/E is 2.71% below its own 5-year median of 24.4x, so it is not stretched against its own history, but that history is only five year-end readings.",
+      "evidence_ids": [
+        "MET.pe_ttm@202609",
+        "MET.pb@202512",
+        "MET.pe_vs_hist@202609"
+      ]
+    },
+    {
+      "statement": "The 50.7% operating margin is up 18.43 percentage points in three years. A reversal of part of that gain would hit profit growth hard. In Q3 2026 the reported operating margin was 20% versus 40% a year earlier, and costs rose 68% against revenue up 26%.",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512",
+        "MET.np_cagr_3@202512",
+        "DOC.META.937aee.p2"
+      ]
+    },
+    {
+      "statement": "Trailing four-quarter net profit (75,249 USD m) is well above FY25 net profit (60,458 USD m). Whether that step-up is sustainable is untested by the evidence provided.",
+      "evidence_ids": [
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512"
+      ]
+    },
+    {
+      "statement": "Legal exposure is large and ongoing: the August 2026 agreement with 52 attorneys general provides for payments of up to approximately $18.59 billion, with a $9.89 billion charge in Q3 2026, and further youth-related trials are scheduled in the coming months.",
+      "evidence_ids": [
+        "DOC.META.937aee.p2",
+        "DOC.META.937aee.p5"
+      ]
+    },
+    {
+      "statement": "Heavy AI infrastructure spending is absorbing cash: 2026 capex is guided to $135-145 billion, Q3 2026 free cash flow was negative $2.12 billion, and management says the longer-dated AI investments will take longer to generate returns than the core business.",
+      "evidence_ids": [
+        "DOC.META.937aee.p4",
+        "DOC.META.937aee.p5",
+        "DOC.META.937aee.p6"
+      ]
+    }
+  ],
+  "stance": "STRONG",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis is wrong if the AI spending of $135-145bn does not earn its keep and costs keep outgrowing revenue. In Q3 2026 costs rose 68% against revenue up 26%, and the operating margin was 20% versus 40%. Excluding the $9.89bn legal charge it was roughly 35%, still well below a year earlier. The drivers are annual or 3-year trailing figures, so they will read OK long after the run-rate has deteriorated. Free cash flow was negative $2.12bn, which the 1.92x cash/profit driver does not capture. Management concedes the AI returns will take longer to arrive than those of the core business. What would change this view: Two or more consecutive quarters of operating margin ex-legal-charges back above 40%, with free cash flow positive while revenue growth stays above 20%, would make me drop the objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

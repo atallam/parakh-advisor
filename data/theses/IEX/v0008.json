@@ -1,0 +1,117 @@
+{
+  "instrument_id": "INE022Q01020",
+  "version": 8,
+  "as_of_data_date": "2026-10-06",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:2122bf0bf3a50226ad01f250da78a4b70011dd5c4936bc4abfb6aa2d4ddea225",
+  "business_summary": "Indian Energy Exchange operates in the power exchange sector. In FY26 it earned an operating margin of 84.46% and net profit of 473.71 Rs cr. Revenue grew 14.92% a year over three years. It carries almost no debt (debt/equity 0.01x). The evidence supplied does not describe its products or volumes.",
+  "why_own": "The case rests on a high-margin, low-debt business that has compounded revenue at about 15% a year with ROCE of 47.58% and ROE of 39.4%. No investor documents were supplied, so the drivers are metric-only and the qualitative side of the thesis is untested.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 14.92%, 5-year 13.92%). (warn line tightened by code from 10 to 10.44.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 10.44,
+      "break_threshold": 6.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin stays near its current very high level (84.46%, up 0.48 pp over 3 years).",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 78.0,
+      "break_threshold": 70.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital remain high (ROCE 47.58%, ROE 39.4%) with negligible borrowings.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 35.0,
+      "break_threshold": 25.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603",
+        "MET.debt_equity@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Reported profit is backed by cash: cash from operations was 0.9x net profit in FY26.",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.7,
+      "break_threshold": 0.5,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202603",
+        "MET.np_fy@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 65%, well outside the current range.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 65.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "ROCE falls below 20%, less than half the current level.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 20.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "The trailing P/E of 19.02x is 49.69% below the stock's own 5-year median. The evidence does not say why, so whether this reflects a cheaper entry point or a changed view of the business is untested. Price/book is 7.09x.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pe_vs_hist@202606",
+        "MET.pb@202603"
+      ]
+    },
+    {
+      "statement": "An operating margin of 84.46% leaves limited room for improvement, so profit growth depends mostly on revenue growth. The 3-year net profit CAGR is 17.41% against revenue growth of 14.92%.",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.np_cagr_3@202603",
+        "MET.rev_cagr_3@202603"
+      ]
+    },
+    {
+      "statement": "Cash conversion is below 1x (0.9x), so some profit was not matched by operating cash in FY26. The cause is not given in the evidence.",
+      "evidence_ids": [
+        "MET.cfo_np@202603"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis is metric-only and untested on its main risk: market rules. The April 2026 call shows the draft PMR is unresolved, and management says it cannot give a timeline for the final notification or for power market coupling. The thesis would be wrong if redesigned market rules or coupling erode exchange pricing or share, pushing revenue growth below 10% and margin below 78%. Those warn lines are lenient: margin could fall about 6 pp before any flag. The P/E is already about 50% below its 5-year median, and latest-quarter revenue growth of 11.39% is below the 14.92% 3-year CAGR. The market may be pricing a change the metrics have not yet shown. What would change this view: Final PMR and market coupling rules that leave IEX's pricing and exchange share intact, with revenue growth holding above 10.44% and operating margin above 78% in the next reported quarters.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

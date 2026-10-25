@@ -32,7 +32,8 @@ Everything in this document marked **built** runs on your PC against your real e
 | Quarterly drivers | Built 25 Oct | Code-owned QM drivers from the newest quarter vs the same quarter a year earlier; WATCH only (§6.3, §13 item 8e) |
 | Reverse DCF | Built 25 Oct | Second valuation reading; the more cautious of it and own-history wins (§7.1) |
 | Sector percentiles | Built 25 Oct (US live; India needs peer exports) | Peer groups in `config/peers.yaml`; quality percentile can lift INTACT to STRONG (§8) |
-| Supabase `advisory_*` write, WealthLens tab | Not started | After testing |
+| Supabase `advisory_*` write | Built 25 Oct, untested against a live project | Rows, SQL and writer done; needs your Supabase keys (§9.3) |
+| WealthLens tab | Not started | After sign-off |
 
 ---
 
@@ -411,6 +412,8 @@ advisory_evidence   (id, user_id, instrument_id, source, url, retrieved_at, cont
                      excerpt, quality_tier)
 advisory_portfolio  (run_id, user_id, snapshot jsonb)   -- allocation, concentration, dust, DQ flags
 ```
+
+**As built (25 Oct):** `contracts/advisory_v1.py` builds the rows, `supabase/advisory_v1.sql` creates the tables, policies and two current-state views, and `publish/supabase.py` writes them (`advise --publish`). Ids are content-derived so re-publishing is a no-op; `advisory_runs` is written last as the completion marker. `advisory_evidence` is defined but not yet filled. A frozen-shape test fails on any column change until the version is bumped.
 
 Rules: every table carries `user_id` with an RLS policy; rows are append-only (current state is a view over the latest version); the contract is versioned (`advisory.v1`) so the React tab never breaks on a Python change.
 

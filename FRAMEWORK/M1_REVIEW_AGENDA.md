@@ -19,7 +19,7 @@ status: For the review. Plan of record is 00_SYSTEM_DESIGN_V2.md.
 | Concentration | AMD, META and AMZN are 41.6% of listed equity (cap 35%); three names above the 10% cap |
 | Funds | Health cards for 6 funds; stock-level look-through live for 5 (Nippon is exited and leaves with the next CAS) |
 | Tests | 129 passing |
-| Not built | India peer groups (needs your exports), Supabase write, WealthLens tab |
+| Not built | India peer groups (needs your exports), a live Supabase publish (needs your keys), WealthLens tab |
 
 ## 2. How to review (the rubric from the plan)
 
@@ -41,6 +41,7 @@ For each position, in this order of value (AMD, META, AMZN, ELF, TSLA, NVDA, Jio
 | D3 | Quarterly drivers (built 25 Oct). A weak newest quarter now raises WATCH, which stops adds. Lines: revenue down year on year; profit down over 25%; net margin down over 5 points; three quarters of lower profit | Confirm the lines, or loosen them if one-offs (tax, write-downs) cause too many WATCH flags |
 | D10 | Valuation is now the more cautious of own-history P/E and a reverse DCF (US 10%/3%, India 15%/5%, profit as the cash proxy). Lines: 8 points under delivered growth CHEAP, up to +5 FAIR, +5 to +12 RICH, over +12 or any ask above 25% a year STRETCHED | Confirm the rates and lines, or change them. Effect today: AMZN reads FAIR (was CHEAP), SOFI becomes readable (FAIR) |
 | D11 | Sector percentiles use named peer groups (starter lists for the 8 US names in `peers.yaml`). Top third lets INTACT read STRONG, which changes no label today | Check the peer lists; export 8 to 12 Indian peers per group if you want India percentiles |
+| D12 | Which key writes to Supabase. Service-role keys bypass row security and would give Parakh write access to everything; the design says Parakh never holds the WealthLens service key | Create a key limited to inserting into the `advisory_*` tables (my recommendation), or accept a service key kept out of git |
 | D4 | Trims are not gated by confidence (risk is acted on faster) | Keep as designed, or gate. I recommend keep |
 | D5 | LAGGING line for funds: 3 points a year behind the benchmark over 3 years (Q10) | Confirm or change |
 | D6 | Regular-plan funds (Parag Parikh, SBI Contra, Nippon) cost about 0.8 to 0.9 points a year more than Direct (Q11) | Yours; depends on tax and exit load, which the system does not compute |

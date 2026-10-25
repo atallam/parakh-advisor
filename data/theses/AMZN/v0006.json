@@ -1,0 +1,136 @@
+{
+  "instrument_id": "US:AMZN",
+  "version": 6,
+  "as_of_data_date": "2026-07-31",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:7bafad329bb5ba24207b747fe5dabf77809356dc0f1b9873be6533b987daa137",
+  "business_summary": "Amazon operates e-commerce and cloud businesses. Revenue has compounded at 11.73% a year over three years. Operating margin is 20.33%, up 9.79 points in three years, and borrowings are 0.17 times equity. In the latest quarter sales rose 20% and AWS rose 37%, but trailing free cash flow is an outflow because of AI capital spending.",
+  "why_own": "The case rests on double-digit revenue growth, a much higher operating margin (20.33%), a 20.77% ROCE and low leverage, now with AWS growth accelerating to 37% in the latest quarter. The cost is heavy AI capital spending that has pushed trailing free cash flow negative, and trailing net profit is lifted by investment gains, so the annual ratios give a short and partly flattered profit record.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 11.73%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 9.0,
+      "break_threshold": 6.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "The operating margin holds near its current 20.33% after rising 9.79 points in three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 15.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay healthy (ROCE currently 20.77%, ROE 22.29%).",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 15.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays conservatively financed (debt/equity currently 0.17x, interest cover 43.79x). (warn line tightened by code from 0.5 to 0.22.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.22,
+      "break_threshold": 1.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202512",
+        "MET.int_cover@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 8%, which would erase most of the three-year margin gain.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Debt/equity rises above 1.5x, a sharp change from the current low leverage.",
+      "indicator": "debt_equity",
+      "op": ">",
+      "threshold": 1.5,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Trailing 4-quarter net profit (135,281 USD m) is far above FY25 net profit (77,670 USD m). The company says Q2 2026 net income included $53.4 billion of non-operating other income, primarily from its Anthropic investments, and Q1 included $16.8 billion of pre-tax gains from the same investments. The trailing P/E of 20.94x therefore rests partly on investment gains that may not recur.",
+      "evidence_ids": [
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512",
+        "MET.pe_ttm@202606",
+        "DOC.AMZN.83699a.p2",
+        "DOC.AMZN.aa967a.p2"
+      ]
+    },
+    {
+      "statement": "Heavy AI spending has turned trailing free cash flow into an outflow of $7.6 billion, from an inflow of $18.2 billion a year earlier, and management expected about $200 billion of capital expenditure in 2026. Returns on that spending are not yet proven.",
+      "evidence_ids": [
+        "DOC.AMZN.83699a.p3",
+        "DOC.AMZN.9195df.p5"
+      ]
+    },
+    {
+      "statement": "Valuation (trailing P/E 20.94x, price/book 6.89x) looks lower than its own 5-year median (-29.18%), but the comparison uses a trailing profit that is 1.7x the fiscal year's, so the discount may be overstated.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202512",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "The 9.79 point rise in operating margin over three years could reverse. The 3-year net profit CAGR is undefined because profit was zero or negative at the start or end of the window, so the profit track record is short.",
+      "evidence_ids": [
+        "MET.op_margin_chg@202512",
+        "MET.np_cagr_3@202512",
+        "MET.op_margin@202512"
+      ]
+    },
+    {
+      "statement": "Borrowing is rising faster than the year-end balance sheet metric shows. Proceeds from debt were $82.4 billion in the six months to June 2026 against $4.7 billion a year earlier, and the company says it expects further financing in 2026. Cash capital expenditure was $96.3 billion in the six months against $55.6 billion, and the company invested $28.7 billion in OpenAI preferred stock, funded a further $21.3 billion after quarter end, and put $10.0 billion into Anthropic in Q2. The 0.17x debt/equity is a FY25 figure and does not yet capture this.",
+      "evidence_ids": [
+        "DOC.AMZN.17e583.p13",
+        "DOC.AMZN.17e583.p10",
+        "DOC.AMZN.17e583.p12",
+        "MET.debt_equity@202512"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis is graded on FY25 ratios that predate the 2026 spending and funding surge. Debt proceeds were $82.4bn in six months versus $4.7bn a year earlier. Investing outflows doubled to $143.5bn, including $28.7bn in OpenAI and $10.0bn in Anthropic. The 0.17x leverage and 20.77% ROCE will be restated at FY26. The thesis is wrong if AI capex and investments earn less than their cost of capital, so that depreciation and interest erode the margin while borrowing climbs. The break and kill lines (debt/equity 1.0x and 1.5x, margin 8%) sit far from today's readings, so they would trip only after the damage. The market also already implies 15.24% growth against 11.73% delivered. What would change this view: FY26 year-end figures showing debt/equity still near 0.2x, with operating margin and ROCE holding at or above current levels after the 2026 capex and investment outlays and without the Anthropic-related gains.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

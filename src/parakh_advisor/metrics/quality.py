@@ -141,6 +141,16 @@ def quarterly_metrics(q: Table) -> list[Metric]:
                 break
             run += 1
             k -= 1
+    # a one-off in the year-ago quarter makes the YoY figure look great (META: Sep 2025 carried a tax
+    # charge, so Sep 2026 shows +264% even as profit halved from the two quarters before). The median of
+    # the previous four quarters is a base one outlier cannot move.
+    prev = [x for x in prof[max(0, i - 4) : i] if x is not None] if i >= 4 else []
+    med_prev = statistics.median(prev) if len(prev) == 4 else None
+    vs_med = (
+        None
+        if med_prev is None or med_prev <= 0 or prof[i] is None
+        else (prof[i] / med_prev - 1) * 100
+    )
     no_pair = None if j is not None else "no quarter a year earlier in the data"
     return [
         _m(
@@ -166,6 +176,14 @@ def quarterly_metrics(q: Table) -> list[Metric]:
             "pp",
             f"net profit / sales, {vs}",
             no_pair or (None if margin_chg is not None else "sales missing"),
+        ),
+        _m(
+            "q_np_vs_med4",
+            "Net profit vs median of previous 4 quarters",
+            vs_med,
+            "%",
+            f"net profit, {when} vs median of the 4 quarters before it",
+            None if vs_med is not None else "needs 5 reported quarters and a positive median",
         ),
         _m(
             "q_np_down_run",

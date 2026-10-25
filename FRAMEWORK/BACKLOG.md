@@ -5,6 +5,7 @@ New ideas go here, not into the build. An item enters only if it changes a decis
 ## Built since the first version of this list
 - Fund look-through exposure across funds and direct holdings (built 24 Oct; live for 5 of 6 funds from 25 Oct)
 - Researcher auto-fetch (25 Oct): EDGAR earnings releases and MD&A; Screener-listed India transcripts and results; manual-download list where the exchange refuses; transcript validation. Theses cite real filings; 17 of 19 are MEDIUM confidence
+- Supabase `advisory_*` contract, SQL and writer, with a frozen-shape test (25 Oct, not yet run on a live project)
 - Reverse DCF (second valuation reading, the more cautious wins) and sector quality percentiles with US peer groups (25 Oct)
 - Perturbation and golden tests against an independent spreadsheet (25 Oct)
 - Quarterly drivers: code-owned WATCH drivers from the newest quarter against the same quarter a year earlier (25 Oct)
@@ -13,7 +14,8 @@ New ideas go here, not into the build. An item enters only if it changes a decis
 ## Next, in rough order of value
 - India peer exports: 8 to 12 Screener files per group under `data/inbox/peers/<group>/` and a group per Indian holding in `peers.yaml` (needs you)
 - Per-holding "advice journal" (every label, date and price) to judge the advice after a few quarters
-- Supabase `advisory_*` write and the tab contract fixture, then the WealthLens React "Advisory" tab (reads advisory_* via Supabase RLS)
+- Run the SQL in your Supabase project, set keys, first `advise --publish` (needs you); then the WealthLens React "Advisory" tab
+- Fill `advisory_evidence` (source, url, excerpt) for the evidence the theses cite
 - Scheduled runs (GitHub Actions) and the monthly light check
 
 ## Later / maybe

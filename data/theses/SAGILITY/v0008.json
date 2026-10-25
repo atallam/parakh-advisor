@@ -1,0 +1,116 @@
+{
+  "instrument_id": "INE0W2G01015",
+  "version": 8,
+  "as_of_data_date": "2026-09-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:b7c522361d2d1987987726d8ad3f7ec04506eef6b256955cd4ebb8d80ae9c64a",
+  "business_summary": "Sagility is a business services company. It grew sales at a 19.47% three-year CAGR to FY26, with an operating margin of 24.53% and low borrowings (debt/equity 0.11x). Net profit was Rs 924.77 cr in FY26 and Rs 1026.41 cr over the last four quarters. The evidence does not describe its operations.",
+  "why_own": "The case rests on steady double-digit revenue growth at a stable, high operating margin, with profit backed by cash and little debt. Evidence is thin: no supplied documents, no 5-year growth figure and no comparison of valuation with its own history, so the drivers are metric-only and the reason profit has grown much faster than sales is untested.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 19.47%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 14.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds near its current 24.53% level; it was essentially unchanged over three years (-0.1 pp).",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 22.0,
+      "break_threshold": 19.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Reported profit is backed by cash: operating cash flow is 1.3x net profit. (warn line tightened by code from 0.9 to 0.91.)",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.91,
+      "break_threshold": 0.7,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays conservative, with debt/equity at 0.11x and interest cover at 13.49x. (warn line tightened by code from 0.4 to 0.14.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.14,
+      "break_threshold": 0.7,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 17%, well below the current 24.53%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 17.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Three-year revenue CAGR falls below 8%, which would end the growth case.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Net profit 3-year CAGR is 86.06% against revenue growth of 19.47%, with margin flat over the same period. The evidence does not explain this gap, so the sustainability of profit growth is untested.",
+      "evidence_ids": [
+        "MET.np_cagr_3@202603",
+        "MET.rev_cagr_3@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "statement": "Returns on capital are modest (ROCE 12.42%, ROE 10.28%) for a stock at 20.74x trailing earnings and 2.2x book. No comparison with its own valuation history is available.",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603",
+        "MET.pe_ttm@202609",
+        "MET.pb@202603",
+        "MET.pe_vs_hist@202609"
+      ]
+    },
+    {
+      "statement": "The record is short: the 5-year revenue CAGR is not available, so the durability of growth is less proven.",
+      "evidence_ids": [
+        "MET.rev_cagr_5@202603"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis treats 19.47% rupee revenue growth as steady compounding, but the latest quarter's 27.6% reported growth is only 15.2% in constant currency, close to the 14% warn line. The 'organic' figure excludes only CareSeed, and an analyst attributes incremental revenue to BroadPath. Profit is now lagging sales: quarterly profit grew 13.3% against 22.5% sales growth, and net margin fell 1.14 pp. The 86% profit CAGR is unexplained. The thesis is wrong if underlying growth is nearer 15% and acquisition-aided, and if profit growth keeps trailing sales. The kill lines (margin below 17%, CAGR below 8%) are too lenient to flag this early. What would change this view: Disclosure of constant-currency, ex-acquisition revenue growth holding at or above about 14% together with profit growth tracking sales growth (net margin stable) over the next few quarters.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

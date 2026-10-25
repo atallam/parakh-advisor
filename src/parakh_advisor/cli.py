@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -256,6 +257,40 @@ def cmd_advise(args: argparse.Namespace) -> int:
             print("Digest sent to Telegram.")
         except SourceError as exc:
             print(f"warning: digest not sent ({exc}). Saved to {args.digest}", file=sys.stderr)
+    if args.bundle or args.publish:
+        from parakh_advisor.contracts.advisory_v1 import build_bundle
+
+        user_id = (
+            os.environ.get("PARAKH_USER_ID", "").strip() or "00000000-0000-0000-0000-000000000000"
+        )
+        bundle = build_bundle(
+            snap,
+            alerts,
+            theses,
+            metrics,
+            policy,
+            user_id,
+            {k: i.symbol for k, i in instruments.items()},
+        )
+        Path(args.bundle).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.bundle).write_text(bundle.model_dump_json(indent=2), encoding="utf-8")
+        print(f"Wrote {args.bundle} (advisory.v1, {len(bundle.advisory_actions)} actions)")
+        if args.publish:
+            from parakh_advisor.publish.supabase import publish
+            from parakh_advisor.sources.http import SourceError
+
+            if user_id.startswith("00000000"):
+                print(
+                    "error: set PARAKH_USER_ID (your Supabase auth user id) in .env to publish",
+                    file=sys.stderr,
+                )
+                return 2
+            try:
+                sent = publish(bundle)
+                print("Published to Supabase: " + ", ".join(f"{k} {v}" for k, v in sent.items()))
+            except SourceError as exc:
+                print(f"error: not published ({exc}). Re-running is safe.", file=sys.stderr)
+                return 1
     print(f"Wrote {out}  ({len(alerts)} alert(s))")
     for a in alerts:
         print(f"  [{a.severity.upper():6}] {a.symbol}: {a.title}")
@@ -356,6 +391,14 @@ def main(argv: list[str] | None = None) -> int:
     ad.add_argument("--screener", default="data/inbox/screener")
     ad.add_argument("--instruments", default="config/instruments.yaml")
     ad.add_argument("--store", default="data/theses")
+    ad.add_argument(
+        "--bundle", default="out/advisory_v1.json", help="Where to write the advisory.v1 rows"
+    )
+    ad.add_argument(
+        "--publish",
+        action="store_true",
+        help="Write the rows to Supabase (needs SUPABASE_URL, SUPABASE_KEY, PARAKH_USER_ID in .env)",
+    )
     ad.set_defaults(func=cmd_advise)
     th = sub.add_parser(
         "thesis", help="Write or refresh theses (calls the LLM; needs ANTHROPIC_API_KEY)"

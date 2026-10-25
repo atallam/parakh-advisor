@@ -175,3 +175,30 @@ def test_model_driver_on_the_same_indicator_is_respected():
 def test_evidence_period_uses_quarter_end(base):
     ids = {e.id for e in from_metrics(base)}
     assert f"MET.q_np_yoy@{base.quarter_end:%Y%m}" in ids
+
+
+def test_year_ago_one_off_cannot_hide_a_collapse():
+    # META pattern: the year-ago quarter was depressed by a one-off, so YoY looks superb
+    dates = [
+        date(2025, 6, 30),
+        date(2025, 9, 30),
+        date(2025, 12, 31),
+        date(2026, 3, 31),
+        date(2026, 6, 30),
+        date(2026, 9, 30),
+    ]
+    ms = quarterly_metrics(_q([100] * 6, [18, 2.7, 22.8, 26.8, 15.8, 9.9], dates))
+    assert _get(ms, "q_np_yoy").value > 200  # the YoY figure is fooled
+    v = _get(ms, "q_np_vs_med4").value
+    assert -50 < v < -45  # 9.9 against the median of (2.7, 22.8, 26.8, 15.8) = 19.3
+    assert [d.indicator for d in quarterly_drivers([], [_ev("q_np_vs_med4", v)])] == [
+        "q_np_vs_med4"
+    ]
+
+
+def test_median_base_needs_five_quarters_and_positive_median():
+    ms = quarterly_metrics(_q([100] * 4, [10, 10, 10, 9], D[:4]))
+    assert _get(ms, "q_np_vs_med4").value is None
+    dates = [date(2025, 6, 30), *D]
+    ms = quarterly_metrics(_q([100] * 6, [-5, -5, -5, -5, 1, 5], dates))
+    assert _get(ms, "q_np_vs_med4").value is None  # a loss-making base gives no percentage

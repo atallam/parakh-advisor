@@ -1,0 +1,125 @@
+{
+  "instrument_id": "INE200M01039",
+  "version": 8,
+  "as_of_data_date": "2026-08-31",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:d75553d03b64443e38ddc9244b69afc84c1cf82e820497d3ba2dcf43ea724683",
+  "business_summary": "Varun Beverages operates in the beverages sector. The evidence supplied covers financial metrics only, with no description of products, geographies or customers, so this summary stays at sector level. FY25 net profit was 3036.49 Rs cr and trailing four-quarter net profit was 3386.14 Rs cr, with no loss-making quarters in the last four.",
+  "why_own": "The case rests on sustained growth (revenue 18.08% 3y CAGR, net profit 26.57% 3y CAGR) delivered with a 23.38% operating margin, 19.04% ROCE and low leverage (0.13x debt/equity). Evidence is financial only, with no results or call documents, so the drivers are metric-based and the qualitative side of the thesis is untested.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate: 3y revenue CAGR is 18.08%, below the 5y CAGR of 27.44%.",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 14.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds at a high level: 23.38% in FY25, up 1.65 pp over three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 21.0,
+      "break_threshold": 19.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay healthy: ROCE is 19.04% and ROE is 16.78%.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 16.0,
+      "break_threshold": 13.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays conservative: debt/equity is 0.13x and interest cover is 21.46x. (warn line tightened by code from 0.5 to 0.17.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.17,
+      "break_threshold": 1.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202512",
+        "MET.int_cover@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 18%, well under the current 23.38%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 18.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Leverage rises above 1.0x debt/equity from the current 0.13x.",
+      "indicator": "debt_equity",
+      "op": ">",
+      "threshold": 1.0,
+      "tripped": false
+    },
+    {
+      "id": "K3",
+      "description": "3y revenue CAGR falls below 8%, against 18.08% now.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation stays demanding: trailing P/E is 39.96x and price/book is 6.91x. P/E is 30.39% below its own 5y median of 57.4x, but a high multiple leaves little room if growth slows.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202512",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Growth is slower than earlier: 3y revenue CAGR of 18.08% compares with 27.44% over 5 years. The reason is untested here, and further slowing would weaken the growth case.",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "statement": "Margin and return levels (operating margin 23.38%, ROCE 19.04%) are already high, so any reversal would hit earnings growth. Net profit 3y CAGR is 26.57%, and profit compounding relies on these levels holding.",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.roce@202512",
+        "MET.np_cagr_3@202512"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis is wrong if growth keeps decelerating while margins slip. The price already assumes 26.43% a year of profit growth for ten years, only 1.43 pp above delivered growth. But 3y revenue CAGR (18.08%) is well below the 5y figure (27.44%). In the June 2026 quarter, profit grew 15.47% against sales growth of 20.43%, and net margin fell 0.77 pp. The thresholds are loose: revenue CAGR can fall to 10% and margin to 19% before D1 or D2 breaks, so deterioration could pass as OK. The evidence is financial only, so nothing explains why growth slowed. What would change this view: Two or more further quarters in which YoY profit growth is at or above sales growth and net margin stops falling, with 3y revenue CAGR holding near 18%, would drop my objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

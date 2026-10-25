@@ -1,0 +1,157 @@
+{
+  "instrument_id": "INE249Z01020",
+  "version": 8,
+  "as_of_data_date": "2026-06-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:a6b6bd7784e159faef5c93152e09cf22fb14cf2c94ed4e0fd81a60103b55979f",
+  "business_summary": "Mazagon Dock Shipbuilders is a defence shipbuilder. FY26 net profit was Rs 2,583 crore, with Rs 2,858 crore over the last four quarters and no loss-making quarters. Revenue grew 18.4% a year over three years, and operating margin is 17.4%.",
+  "why_own": "The case rests on strong revenue and profit growth, a wider operating margin, high returns on capital and almost no debt. FY26 operating cash flow was negative despite positive profit, and the P/E is about 40% above its own 5-year median, so the thesis depends on earnings converting to cash. No supplied documents were available, so there are no qualitative drivers.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 18.4%, 5-year 26.3%). (warn line tightened by code from 12 to 12.91.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 12.91,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds most of its recent expansion (17.4% in FY26, up 7.2 percentage points over three years).",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 13.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay high (ROCE 32.5%, ROE 29.2%), so growth is earning well above a typical cost of capital. (warn line tightened by code from 22 to 22.71.)",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 22.71,
+      "break_threshold": 15.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays nearly debt-free (debt/equity 0.05x, interest cover 44.8x), leaving room to fund growth without financial strain. (warn line tightened by code from 0.3 to 0.07.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.07,
+      "break_threshold": 0.6,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Cash conversion: operating cash flow should cover at least half of reported profit. (added by code: currently -1.03.)",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.5,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.cfo_np@202603"
+      ]
+    },
+    {
+      "id": "H2",
+      "statement": "Trailing P/E should not sit more than 30% above its own 5-year median. (added by code: currently 39.87.)",
+      "kind": "metric",
+      "indicator": "pe_vs_hist",
+      "direction": "lte",
+      "warn_threshold": 30.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.pe_vs_hist@202606"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 10%, which would reverse most of the three-year expansion.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 10.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "ROCE falls below 15%, so the high-return premise no longer holds.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 15.0,
+      "tripped": false
+    },
+    {
+      "id": "K3",
+      "description": "More than one loss-making quarter in the last four.",
+      "indicator": "loss_quarters_4",
+      "op": ">",
+      "threshold": 1.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Cash from operations was negative in FY26 (about -1.03x net profit) even though net profit was positive. The cause is not in the evidence and is untested, but profit is not yet turning into operating cash.",
+      "evidence_ids": [
+        "MET.cfo_np@202603",
+        "MET.np_fy@202603"
+      ]
+    },
+    {
+      "statement": "Valuation is demanding: trailing P/E is 27.1x, about 40% above its own 5-year median of 19.4x, and price/book is 7.95x. Any slowdown in growth or margin could be punished.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pe_vs_hist@202606",
+        "MET.pb@202603"
+      ]
+    },
+    {
+      "statement": "The 7.2 percentage point margin gain over three years may not persist. The evidence does not say what drove it, so whether it is durable is untested.",
+      "evidence_ids": [
+        "MET.op_margin_chg@202603",
+        "MET.op_margin@202603"
+      ]
+    },
+    {
+      "statement": "Revenue growth over three years (18.4% CAGR) is slower than over five years (26.3%), so the growth rate may be easing.",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    }
+  ],
+  "stance": "WEAKENING",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis would be wrong if FY26 profit is largely accounting rather than cash. Operating cash flow was -1.03x net profit, the cause is unexplained, and the cash-conversion check has no break threshold, so it can never kill the thesis. The stock trades at 27.1x trailing earnings, about 40% above its own median, and 7.95x book. That price needs about 20.6% yearly profit growth for 10 years. Latest-quarter revenue growth was 12.08%, below the 18.4% three-year and 26.3% five-year rates. The thesis fails if growth keeps slowing, margins give back gains, and profit does not turn into cash. The margin kill line (10%) only trips after the whole expansion is erased. What would change this view: Evidence that the FY26 negative operating cash flow was a timing or working-capital effect that reverses, such as positive operating cash flow covering at least half of profit in the next fiscal year, would remove my main objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}
