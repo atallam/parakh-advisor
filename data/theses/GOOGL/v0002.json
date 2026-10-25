@@ -1,0 +1,119 @@
+{
+  "instrument_id": "US:GOOGL",
+  "version": 2,
+  "as_of_data_date": "2026-06-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:236e5a11e3d84ddb613a4bac1a11103149e29f4d92bb30938dc31befc2c700f2",
+  "business_summary": "Alphabet is classed as an internet platforms company. The evidence supplied is financial only: a FY25 operating margin of 37.28%, ROCE of 34.4% and debt/equity of 0.12x. No segment detail or investor documents were provided, so this summary does not describe products or revenue mix.",
+  "why_own": "The evidence shows a highly profitable, low-debt business (ROE 35.7%, operating margin 37.28%) that has grown revenue 12.51% a year over 3 years with profits growing faster (30.14% a year). The case rests on numbers alone because no investor documents were supplied, so it has no qualitative drivers, and it is untested against the stock's own valuation history.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 12.51%, versus 17.15% over 5 years).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": 7.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin stays high (37.28% in FY25, up 6.05 pp over 3 years), so growth keeps converting into profit.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 32.0,
+      "break_threshold": 27.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay well above typical levels (ROCE 34.4%, ROE 35.7%) with little leverage (debt/equity 0.12x).",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 25.0,
+      "break_threshold": 18.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512",
+        "MET.debt_equity@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Reported profit is backed by cash: operating cash flow was 1.25 times net profit in FY25.",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 1.0,
+      "break_threshold": 0.8,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 25%, well under the FY25 level of 37.28%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 25.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "ROCE falls below 15%, less than half the FY25 level of 34.4%.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 15.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Price/book is 10.02x, so the valuation depends on returns staying near current levels (ROE 35.7%). The P/E comparison with the stock's own history is not available (n/a), so whether the current 17.04x trailing P/E is high or low relative to history is untested.",
+      "evidence_ids": [
+        "MET.pb@202512",
+        "MET.roe@202512",
+        "MET.pe_ttm@202606",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Revenue growth over 3 years (12.51% a year) is below the 5-year rate (17.15% a year), so growth may be slowing. The evidence does not say why.",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "statement": "Trailing-4-quarter net profit (244,205 USD m) is far above FY25 net profit (132,170 USD m). The evidence does not explain the gap, so the trailing P/E of 17.04x rests on a profit base that has not been tested. No quarter in the last 4 was loss-making.",
+      "evidence_ids": [
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512",
+        "MET.pe_ttm@202606",
+        "MET.loss_quarters_4@202512"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis is wrong if FY25 is a cyclical high in margins and growth, not a base. Revenue growth has already slowed from 17.15% (5y) to 12.51% (3y). Profit grew 30.14% a year against revenue's 12.51%, so margin expansion drove it, and that cannot repeat. The thresholds are lenient: operating margin must fall from 37.28% to below 27% before D2 breaks, and revenue growth to 7%, with nothing flagged along the way. Valuation (P/B 10.02x) assumes returns stay near 35%. The 17.04x trailing P/E rests on trailing profit that is 1.85x the fiscal-year figure, unexplained. Evidence is financial only, so there is no check on why any of this holds. What would change this view: Evidence that the trailing profit of 244,205 USD m is recurring operating earnings, and that revenue growth and operating margin have held at or above FY25 levels in the latest quarters, would remove most of this objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

@@ -1,0 +1,118 @@
+{
+  "instrument_id": "US:AMZN",
+  "version": 2,
+  "as_of_data_date": "2026-06-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:c14426c6e587a5e5c6daab1ef06a33e30d9ed346898952abac08c2f1193e4790",
+  "business_summary": "Amazon.com Inc. operates in e-commerce and cloud. Revenue has compounded at 11.73% a year over three years and 13.18% over five. Operating margin is 20.33%, up 9.79 percentage points in three years. Borrowings are low at 0.17 times equity, and the company has had no loss-making quarters in the last four.",
+  "why_own": "The case rests on double-digit revenue growth combined with a much higher operating margin (20.33%, up 9.79 points in three years), a 20.77% ROCE and low leverage. No investor documents were supplied, so there are no qualitative drivers, and the thesis relies on a few annual ratios.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 11.73%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 9.0,
+      "break_threshold": 6.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "The operating margin holds near its current 20.33% after rising 9.79 points in three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 15.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay healthy (ROCE currently 20.77%, ROE 22.29%).",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 15.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "The balance sheet stays conservatively financed (debt/equity currently 0.17x, interest cover 43.79x). (warn line tightened by code from 0.5 to 0.22.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.22,
+      "break_threshold": 1.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202512",
+        "MET.int_cover@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 8%, which would erase most of the three-year margin gain.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Debt/equity rises above 1.5x, a sharp change from the current low leverage.",
+      "indicator": "debt_equity",
+      "op": ">",
+      "threshold": 1.5,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "The valuation (trailing P/E 20.94x, price/book 6.89x) cannot be compared with the stock's own history, because the P/E-vs-5-year-median figure is unavailable.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202512",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Trailing 4-quarter net profit (135,281 USD m) is far above FY25 net profit (77,670 USD m). What drives the gap has not been tested with the evidence supplied, so the P/E may rest on an earnings base that does not persist.",
+      "evidence_ids": [
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512",
+        "MET.pe_ttm@202606"
+      ]
+    },
+    {
+      "statement": "The 9.79 point rise in operating margin over three years could reverse. The 3-year net profit CAGR is undefined because profit was zero or negative at the start or end of the window, so the profit track record is short.",
+      "evidence_ids": [
+        "MET.op_margin_chg@202512",
+        "MET.np_cagr_3@202512",
+        "MET.op_margin@202512"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis is wrong if the margin gain and the TTM profit are less durable than the thresholds assume. The kill line (8% operating margin) sits below the margin three years ago (20.33 - 9.79 = 10.54%), so the whole gain could reverse without tripping it. The break line is 10%, also below that level. Revenue growth is slowing (3y 11.73% vs 5y 13.18%), and D1 only breaks at 6%. Trailing profit is 1.7x the FY25 figure and the cause is untested, so the 20.94x P/E may rest on a non-recurring earnings base. The evidence is annual ratios only, with no documents and no profit CAGR. What would change this view: Evidence that the trailing-profit excess over FY25 is recurring operating earnings, together with margin thresholds reset above the 10.5% starting level, would remove most of my objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

@@ -1,0 +1,144 @@
+{
+  "instrument_id": "US:TSLA",
+  "version": 2,
+  "as_of_data_date": "2026-09-30",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:53fd59f8b46bba7e38f5a20483602d73f7af6ee3550c5d379651e32b110e53e5",
+  "business_summary": "Tesla, Inc. is classed in the Automobiles sector. The evidence supplied has no business description or company documents, so this summary uses only financial figures: FY25 operating margin of 9.9%, FY25 net profit of USD 3,794 million, and borrowings of 0.1x equity.",
+  "why_own": "The case rests on a profitable, lightly indebted company (no loss-making quarters in the last four, debt/equity of 0.1x) whose 5-year revenue CAGR of 24.63% has slowed to 5.19% over 3 years while net profit has fallen. The evidence is thin, with no results or call documents, so there are no qualitative drivers. At a trailing P/E of 459x and a price/book of 17.98x, the price already assumes a lot.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Operating margin holds near high single digits. It is 9.9% in FY25, down 9.84 percentage points over three years, so further erosion would undermine the case.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 8.0,
+      "break_threshold": 5.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Revenue keeps growing. The 3-year CAGR is 5.19%, well below the 5-year CAGR of 24.63%, so stalling growth is the thing to watch. (warn line tightened by code from 3 to 3.63.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 3.63,
+      "break_threshold": 0.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "The balance sheet stays conservative. Debt/equity is 0.1x and interest cover is 16.62x. (warn line tightened by code from 0.3 to 0.13.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.13,
+      "break_threshold": 0.5,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202512",
+        "MET.int_cover@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Returns on capital stay positive and do not fall further. ROCE is 6.22% and ROE is 4.89%, both low in absolute terms.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 5.0,
+      "break_threshold": 3.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Return on equity should stay above 10%. (added by code: currently 4.89.)",
+      "kind": "metric",
+      "indicator": "roe",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.roe@202512"
+      ]
+    },
+    {
+      "id": "H2",
+      "statement": "Trailing P/E should stay below 60x, or the price needs years of flawless growth. (added by code: currently 459.04.)",
+      "kind": "metric",
+      "indicator": "pe_ttm",
+      "direction": "lte",
+      "warn_threshold": 60.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.pe_ttm@202609"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 5%, which would leave little cushion on the current profit base.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 5.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "More than 2 of the last 4 quarters are loss-making.",
+      "indicator": "loss_quarters_4",
+      "op": ">",
+      "threshold": 2.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is very demanding. The trailing P/E is 459x and price/book is 17.98x, so any earnings disappointment could matter a lot. There is no own-history P/E comparison available.",
+      "evidence_ids": [
+        "MET.pe_ttm@202609",
+        "MET.pb@202512",
+        "MET.pe_vs_hist@202609"
+      ]
+    },
+    {
+      "statement": "Profits are shrinking. Net profit growth is -32.9% a year over 3 years, and trailing 4-quarter net profit of USD 3,218 million is below FY25's USD 3,794 million. The reasons are not covered by the evidence and remain untested.",
+      "evidence_ids": [
+        "MET.np_cagr_3@202512",
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512"
+      ]
+    },
+    {
+      "statement": "Margins and returns are thin for the valuation. Operating margin is down 9.84 percentage points in 3 years to 9.9%, and ROCE is 6.22%.",
+      "evidence_ids": [
+        "MET.op_margin_chg@202512",
+        "MET.op_margin@202512",
+        "MET.roce@202512"
+      ]
+    }
+  ],
+  "stance": "WEAKENING",
+  "confidence": "LOW",
+  "skeptic_counter_case": "The thesis is wrong if earnings do not grow into the price. At 459x trailing earnings and 17.98x book, Tesla needs sharp profit growth, yet net profit fell 32.9% a year over 3 years and operating margin fell 9.84pp. Two of the code-added hurdles already fail (ROE 4.89% vs 10%, P/E 459x vs 60x) and are only flagged WATCH, with no break line. The thresholds on the original drivers are lenient. Operating margin can nearly halve to 5% before K1 trips, and revenue growth can fall to zero before D2 breaks. Within this investor's own holdings, only AMD (136x), e.l.f. (114x) and Shadowfax (94x) come close on P/E. The evidence has no documents, so nothing explains the decline. What would change this view: Evidence that net profit and operating margin have turned up and are growing fast enough to bring trailing P/E toward the thesis's own 60x ceiling, with ROE back above 10%.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

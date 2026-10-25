@@ -1,0 +1,123 @@
+{
+  "instrument_id": "INE101A01026",
+  "version": 3,
+  "as_of_data_date": "2026-10-25",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:4b64931cfa152291e3dbb4f48b36a234ccee1e7fbfff72c95c2a43333b3234c5",
+  "business_summary": "Mahindra & Mahindra is an Indian automobiles company. Revenue has grown 17.85% a year over three years to FY26. FY26 operating margin was 18.62% and net profit was Rs 17,098.85 crore, with no loss-making quarter in the last four. Debt/equity is 1.47x.",
+  "why_own": "The case rests on sustained double-digit revenue growth, with a 3-year revenue CAGR of 17.85% and net profit CAGR of 18.48%, plus a 3-year operating margin gain of 1.87 pp and ROE of 20.1%. Trailing P/E of 19.32x is 8.85% below its own 5-year median, but cash flow is only 0.68x of profit and leverage is 1.47x. No investor documents were supplied, so the drivers are metric-only.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate; the 3-year revenue CAGR is currently 17.85%. (warn line tightened by code from 12 to 12.5.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 12.5,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds near the current 18.62%, which is up 1.87 pp over three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 16.0,
+      "break_threshold": 14.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay healthy; ROCE is currently 15.12% and ROE is 20.1%.",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 13.0,
+      "break_threshold": 11.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Leverage stays contained; debt/equity is currently 1.47x and interest cover is 3.63x.",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 1.8,
+      "break_threshold": 2.2,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "ROCE falls below 10%, so returns on capital are no longer healthy.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 10.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Interest cover falls below 2x, leaving little room for debt service.",
+      "indicator": "int_cover",
+      "op": "<",
+      "threshold": 2.0,
+      "tripped": false
+    },
+    {
+      "id": "K3",
+      "description": "Operating margin falls below 13%, undoing the margin gains of the last three years.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 13.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Cash conversion is weak: FY26 cash from operations was only 0.68x of net profit. The cause is not tested here.",
+      "evidence_ids": [
+        "MET.cfo_np@202603"
+      ]
+    },
+    {
+      "statement": "Borrowings are meaningful at 1.47x equity, and interest cover is 3.63x. A profit downturn would squeeze debt service.",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603"
+      ]
+    },
+    {
+      "statement": "Valuation is not cheap on book value at 3.83x price/book and 19.32x trailing P/E. A fall in growth or margins could compress the multiple even though P/E is 8.85% below its own 5-year median.",
+      "evidence_ids": [
+        "MET.pb@202603",
+        "MET.pe_ttm@202606",
+        "MET.pe_vs_hist@202606"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis would be wrong if growth and margins are cyclical peaks, not durable gains. Profit is leaning on borrowings and accruals: cash from operations is only 0.68x of profit, debt/equity is 1.47x and interest cover is 3.63x. The thresholds are too lenient to catch this early. K3 says it guards the three-year margin gain, but 13% sits far below the roughly 16.75% margin three years ago. ROCE (15.12%) and interest cover (3.63x) would have to fall a long way before a kill trips. Within this investor's own holdings (not a sector), only one other company carries more leverage. What would change this view: Evidence that FY26 cash conversion of 0.68x was a one-off, such as working-capital or financing-arm build-up that reverses, together with kill thresholds tightened to levels near current margin, ROCE and interest cover.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

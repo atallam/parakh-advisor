@@ -1,0 +1,134 @@
+{
+  "instrument_id": "INE646L01027",
+  "version": 3,
+  "as_of_data_date": "2026-10-25",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:8fa712af1b33ce8db35a0ffc6b0ed0fce42bfb9a1b6be312e74c5d57d1023728",
+  "business_summary": "InterGlobe Aviation is an airline operator. Revenue grew about 16% a year over three years to FY26. Operating margin is 14.17%, but FY26 net profit was negative at Rs 2,391.9 crore, and borrowings are 11.15 times equity. Return on capital is low.",
+  "why_own": "The case rests on revenue still growing at a double-digit rate while operating margin holds, but the company is loss-making (FY26 net profit -Rs 2,391.9 crore, trailing four quarters -Rs 4,805.8 crore) and no investor documents were supplied, so this thesis is thin and metric-only. It is a bet that operating performance can eventually cover the heavy debt burden, and the evidence does not yet show that.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently about 16%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 12.0,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds at or near the current 14%, after rising 2.17 percentage points over three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 12.0,
+      "break_threshold": 9.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Leverage does not climb further from 11.15 times equity.",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 12.5,
+      "break_threshold": 14.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Interest cover, currently below 1 at 0.67 times, does not weaken further. Improvement towards 1 or higher is what the thesis needs.",
+      "kind": "metric",
+      "indicator": "int_cover",
+      "direction": "gte",
+      "warn_threshold": 0.6,
+      "break_threshold": 0.4,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.int_cover@202603",
+        "MET.roce@202603"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Trailing four-quarter net profit should not be negative. (added by code: currently -4805.8.)",
+      "kind": "metric",
+      "indicator": "np_ttm",
+      "direction": "gte",
+      "warn_threshold": 0.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.np_ttm@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "All of the last four reported quarters are loss-making (currently three of four).",
+      "indicator": "loss_quarters_4",
+      "op": ">",
+      "threshold": 3.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Operating margin falls below 8%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "The company is loss-making: FY26 net profit was -Rs 2,391.9 crore, the trailing four quarters total -Rs 4,805.8 crore, and 3 of the last 4 quarters were losses. Profit growth, ROE, cash flow to profit and P/E are all undefined.",
+      "evidence_ids": [
+        "MET.np_fy@202603",
+        "MET.np_ttm@202603",
+        "MET.loss_quarters_4@202603",
+        "MET.np_cagr_3@202603",
+        "MET.roe@202603",
+        "MET.cfo_np@202603",
+        "MET.pe_ttm@202606"
+      ]
+    },
+    {
+      "statement": "Debt is very high at 11.15 times equity, interest cover is 0.67 times, and ROCE is only 4.7%. Earnings do not currently cover interest.",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.int_cover@202603",
+        "MET.roce@202603"
+      ]
+    },
+    {
+      "statement": "The stock trades at 25.55 times book value while losing money. There is no profit-based valuation anchor, since P/E and the comparison with its own history are both unavailable.",
+      "evidence_ids": [
+        "MET.pb@202603",
+        "MET.pe_ttm@202606",
+        "MET.pe_vs_hist@202606"
+      ]
+    }
+  ],
+  "stance": "WEAKENING",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis is wrong if a 14% operating margin and 16% revenue growth never turn into profit. They haven't yet. FY26 net profit was -Rs 2,391.9 crore, and the trailing four quarters are -Rs 4,805.8 crore. Interest cover is 0.67x, ROCE is 4.7%, and debt is 11.15x equity. The thresholds are lenient: the margin only breaks at 9% and the kill line is 8%, yet the company loses money at 14%. Interest cover is 'OK' down to 0.6x, below 1. Valuation is 25.55x book with no earnings anchor. Growth is being funded by leverage, not by earnings. What would change this view: Trailing four-quarter net profit turning positive with interest cover above 1x, while debt/equity stays below 11x and revenue growth holds above 12%.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}
