@@ -77,6 +77,8 @@ def health_lines(snapshot: Snapshot) -> list[str]:
     for f in snapshot.flags:
         if f.code in ("DQ-03", "DQ-04"):
             lines.append(f.message)
+    if snapshot.acknowledged_flags:
+        lines.append("Checked and accepted by you: " + "; ".join(snapshot.acknowledged_flags) + ".")
     return lines
 
 

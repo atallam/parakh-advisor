@@ -16,6 +16,12 @@ class Instrument(BaseModel):
     profile: str = "standard"
     conviction: str = "unset"  # core | standard | starter | tracking: yours to set. Unset = no position-size advice, only the concentration cap applies
     valuation_history_reliable: bool = True
+    screener_code: str | None = None  # Screener URL code when it differs from the symbol, e.g. M&M
+    acknowledge: list[str] = []  # data-quality codes you have checked and accept, e.g. ["DQ-04"]
+
+
+def acknowledged_flags(instruments: dict[str, Instrument]) -> dict[str, set[str]]:
+    return {iid: set(i.acknowledge) for iid, i in instruments.items() if i.acknowledge}
 
 
 def load_instruments(path: str | Path = "config/instruments.yaml") -> dict[str, Instrument]:

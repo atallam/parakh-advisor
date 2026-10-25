@@ -10,7 +10,7 @@ from parakh_advisor.advice.policy import load_policy
 from parakh_advisor.advice.snapshot import build_snapshot
 from parakh_advisor.agents import skeptic, thesis_analyst
 from parakh_advisor.alerts.changes import collapse_baseline
-from parakh_advisor.ingest.instruments import load_instruments
+from parakh_advisor.ingest.instruments import acknowledged_flags, load_instruments
 from parakh_advisor.ingest.normalise import build_portfolio
 from parakh_advisor.ingest.wealthlens_json import ExportError, load_rows
 from parakh_advisor.llm.client import AnthropicLLM, LLMError
@@ -29,7 +29,12 @@ def cmd_snapshot(args: argparse.Namespace) -> int:
         resolver = MfapiResolver(args.cache) if args.online else None
         portfolio = build_portfolio(rows, fund_resolver=resolver)
         policy = load_policy(args.policy)
-        snap = build_snapshot(portfolio, policy, member=args.member)
+        snap = build_snapshot(
+            portfolio,
+            policy,
+            member=args.member,
+            acknowledged=acknowledged_flags(load_instruments(args.instruments)),
+        )
     except (ExportError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -167,11 +172,13 @@ def cmd_advise(args: argparse.Namespace) -> int:
         resolver = MfapiResolver(args.cache) if args.online else None
         portfolio = build_portfolio(rows, fund_resolver=resolver)
         policy = load_policy(args.policy)
-        snap = build_snapshot(portfolio, policy, member=args.member)
+        instruments = load_instruments(args.instruments)
+        snap = build_snapshot(
+            portfolio, policy, member=args.member, acknowledged=acknowledged_flags(instruments)
+        )
     except (ExportError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
-    instruments = load_instruments(args.instruments)
     failures: list[str] = []
     companies = load_companies(instruments, args.screener, portfolio, args.cache, failures=failures)
     store = ThesisStore(args.store, {k: i.symbol for k, i in instruments.items() if i.symbol})
@@ -245,6 +252,43 @@ def cmd_advise(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_fetch_docs(args: argparse.Namespace) -> int:
+    from dotenv import load_dotenv
+
+    from parakh_advisor.research.fetch import fetch_all
+
+    load_dotenv()
+    instruments = load_instruments(args.instruments)
+    if not instruments:
+        print(f"No instruments in {args.instruments}", file=sys.stderr)
+        return 2
+    from parakh_advisor.sources.http import browser_get
+
+    reports = fetch_all(
+        instruments,
+        args.research,
+        args.cache,
+        only=args.only,
+        doc_fetch=browser_get if args.browser_headers else None,
+    )
+    manual = 0
+    for r in reports:
+        line = f"{r.symbol:<14} new {len(r.written)}, already had {r.already_had}"
+        if r.to_download:
+            line += f", {len(r.to_download)} to download by hand"
+            manual += len(r.to_download)
+        print(line)
+        for n in r.notes:
+            print(f"    - {n}")
+    if manual:
+        print(
+            f"\n{manual} document(s) the exchange would not serve to a program are listed in "
+            f"TO_DOWNLOAD.txt inside each stock's folder under {args.research}."
+        )
+    print("Next: parakh-advisor thesis, then parakh-advisor advise --online")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="parakh-advisor", description="Portfolio advisory. Advisory only."
@@ -256,6 +300,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--json", help="Also write the snapshot as JSON")
     p.add_argument("--policy", default="config/policy.yaml")
     p.add_argument("--member", help="Only this member_id (default: all members combined)")
+    p.add_argument("--instruments", default="config/instruments.yaml")
     p.add_argument("--online", action="store_true", help="Resolve funds via AMFI/mfapi (cached)")
     p.add_argument("--cache", default="data/cache")
     p.set_defaults(func=cmd_snapshot)
@@ -313,6 +358,21 @@ def main(argv: list[str] | None = None) -> int:
     th.add_argument("--no-skeptic", action="store_true", help="Skip the Skeptic (saves LLM calls)")
     th.add_argument("--only", help="Only symbols containing this text, e.g. HDFC")
     th.set_defaults(func=cmd_thesis)
+    fd = sub.add_parser(
+        "fetch-docs",
+        help="Download filings (EDGAR for US; Screener-listed transcripts/results for India)",
+    )
+    fd.add_argument("--instruments", default="config/instruments.yaml")
+    fd.add_argument("--research", default="data/inbox/research")
+    fd.add_argument("--cache", default="data/cache")
+    fd.add_argument("--only", help="Only symbols containing this text, e.g. META")
+    fd.add_argument(
+        "--browser-headers",
+        action="store_true",
+        help="Send browser-style headers when downloading India documents from the exchange "
+        "(off by default; use only if the exchange refuses the default request)",
+    )
+    fd.set_defaults(func=cmd_fetch_docs)
     args = parser.parse_args(argv)
     return args.func(args)
 

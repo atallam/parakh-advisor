@@ -294,3 +294,58 @@ def test_digest_text_and_telegram_send(portfolio, policy):
             chat_id="C",
             post=lambda u, b: _json.dumps({"ok": False, "description": "bad"}).encode(),
         )
+
+
+# --- 24 Oct, after the first real report: low-confidence gate, below-band hold, rupee sizes -------------
+
+
+def test_add_is_held_back_to_review_while_confidence_is_low():
+    a = d(weight=1.5, stance="INTACT", valuation="CHEAP", confidence="LOW")
+    assert a.action == A.REVIEW
+    assert "LOW_CONFIDENCE" in a.reasons and "BELOW_BAND" in a.reasons
+    # the same inputs with medium confidence are still ADD
+    assert d(weight=1.5, stance="INTACT", valuation="CHEAP", confidence="MEDIUM").action == A.ADD
+
+
+def test_below_band_with_no_readable_valuation_holds_and_says_why():
+    a = d(weight=0.2, stance="INTACT", valuation="NA", conviction="core", dust=0.1)
+    assert a.action == A.HOLD
+    assert "BELOW_BAND" in a.reasons and "VALUATION_NA" in a.reasons
+
+
+def test_below_band_but_rich_is_hold_not_add():
+    a = d(weight=1.5, stance="INTACT", valuation="RICH", conviction="standard")
+    assert a.action == A.HOLD and "VALUATION_RICH" in a.reasons
+
+
+def test_size_note_in_rupees():
+    from parakh_advisor.advice.apply import size_note
+
+    kw = dict(listed_equity_inr=10_000_000.0, cap=10.0, buffer=2.0)
+    # concentration trim: 16% of 1 crore = 16 lakh; cap 10 lakh -> 6 lakh over; 8% -> 8 lakh to trim
+    n = size_note(
+        weight=16.0,
+        value_inr=1_600_000.0,
+        action=A.TRIM,
+        reasons=["CONCENTRATION"],
+        conviction="core",
+        **kw,
+    )
+    assert "6.0 lakh above the 10% cap" in n and "8.0 lakh" in n
+    # add: core band floor 6% of 1 crore = 6 lakh; holding 0.5 lakh -> 5.5 lakh short
+    n = size_note(
+        weight=0.5,
+        value_inr=50_000.0,
+        action=A.ADD,
+        reasons=["BELOW_BAND"],
+        conviction="core",
+        **kw,
+    )
+    assert "5.5 lakh short of the bottom of its core band (6%)" in n
+    # unset conviction -> no size implied
+    assert (
+        size_note(
+            weight=0.5, value_inr=50_000.0, action=A.HOLD, reasons=[], conviction="unset", **kw
+        )
+        == ""
+    )

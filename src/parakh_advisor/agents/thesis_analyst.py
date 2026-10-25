@@ -127,7 +127,8 @@ def run(
         drivers,
         kills,
         metrics.quarters_reported,
-        sourced=any(e.kind != "metric" for e in evidence),
+        # a filing counts as a source only if it is not stale (about 13 months) next to the newest evidence
+        sourced=any(e.kind != "metric" and (data_date - e.as_of).days <= 400 for e in evidence),
         no_earnings_record=(
             metrics.ttm_profit is not None
             and metrics.ttm_profit <= 0

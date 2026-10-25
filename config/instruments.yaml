@@ -2,6 +2,7 @@
 # screener: company name as it appears in the Screener export (matched case-insensitively).
 # conviction: core | standard | starter | tracking (default unset: no size advice). Only core/standard can ever be advised ADD.
 # valuation_history_reliable: false when own-history P/E is distorted (e.g. HDFC Bank after its 2023 merger).
+# acknowledge: data-quality codes you have checked and accept, e.g. acknowledge: [DQ-04]. Shown once as accepted, not as a warning.
 # profile : standard | bank | airline_lease  (decides which ratios are meaningful)
 INE040A01034: {symbol: HDFCBANK, screener: HDFC BANK LTD, sector: Banks, profile: bank, valuation_history_reliable: false, conviction: standard}
 INE101A01026: {symbol: M&M, screener: MAHINDRA & MAHINDRA LTD, sector: Automobiles, profile: standard,  conviction: standard}
@@ -20,6 +21,6 @@ US:NVDA: {symbol: NVDA, edgar: NVDA, sector: Semiconductors, profile: standard, 
 US:META: {symbol: META, edgar: META, sector: Internet platforms, profile: standard, conviction: core}
 US:GOOGL: {symbol: GOOGL, edgar: GOOGL, sector: Internet platforms, profile: standard,conviction: standard}
 US:AMZN: {symbol: AMZN, edgar: AMZN, sector: E-commerce and cloud, profile: standard,conviction: core}
-US:TSLA: {symbol: TSLA, edgar: TSLA, sector: Automobiles, profile: standard,conviction: standard}
+US:TSLA: {symbol: TSLA, edgar: TSLA, sector: Automobiles, profile: standard,conviction: standard, acknowledge: [DQ-04]}
 US:ELF: {symbol: ELF, edgar: ELF, sector: Cosmetics, profile: standard, conviction: starter}
 US:SOFI: {symbol: SOFI, edgar: SOFI, sector: Fintech and banking, profile: bank,conviction: tracking}

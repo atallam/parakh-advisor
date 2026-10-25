@@ -78,3 +78,20 @@ def test_cost_counts_and_verdict(snap):
 
 def test_net_worth_includes_context_assets(snap):
     assert snap.net_worth_inr > snap.listed_equity_inr
+
+
+def test_acknowledged_flag_is_removed_and_listed_once(portfolio, policy):
+    flagged = next(f for f in portfolio.flags if f.instrument_id and f.code == "DQ-02")
+    base = build_snapshot(portfolio, policy)
+    assert any(f.code == "DQ-02" and f.instrument_id == flagged.instrument_id for f in base.flags)
+    snap = build_snapshot(portfolio, policy, acknowledged={flagged.instrument_id: {"DQ-02"}})
+    assert not any(
+        f.code == "DQ-02" and f.instrument_id == flagged.instrument_id for f in snap.flags
+    )
+    assert any("DQ-02" in x for x in snap.acknowledged_flags)
+    assert all(
+        "DQ-02" not in c
+        for x in snap.holdings
+        if x.instrument_id == flagged.instrument_id
+        for c in x.flag_codes
+    )

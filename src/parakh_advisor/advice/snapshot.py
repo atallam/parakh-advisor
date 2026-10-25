@@ -52,6 +52,7 @@ class Holding(BaseModel):
     reason_codes: list[str] = Field(default_factory=list)
     note: str = ""
     amount_over_cap_inr: float | None = None
+    size_note: str = ""
     flag_codes: list[str] = Field(default_factory=list)
     thesis_status: str = "none yet"
     stance: str | None = None
@@ -100,6 +101,9 @@ class Snapshot(BaseModel):
     fund_overlap: list[str] = Field(default_factory=list)
     lookthrough_rows: list[dict] = Field(default_factory=list)
     lookthrough_lines: list[str] = Field(default_factory=list)
+    acknowledged_flags: list[str] = Field(
+        default_factory=list
+    )  # data-quality flags you have confirmed
 
 
 def _merge(positions: list[Position]) -> dict[str, list[Position]]:
@@ -174,7 +178,14 @@ def _holding(group: list[Position], listed_total: float, policy: Policy) -> Hold
     )
 
 
-def build_snapshot(portfolio: Portfolio, policy: Policy, member: str | None = None) -> Snapshot:
+def build_snapshot(
+    portfolio: Portfolio,
+    policy: Policy,
+    member: str | None = None,
+    acknowledged: dict[str, set[str]] | None = None,
+) -> Snapshot:
+    """`acknowledged` maps instrument_id -> data-quality codes you have confirmed (set `acknowledge:` in
+    config/instruments.yaml). They are removed from the flags and listed once as acknowledged."""
     positions = [p for p in portfolio.positions if member is None or p.member_id == member]
     if not positions:
         raise ValueError(f"No positions found for member filter {member!r}.")
@@ -220,6 +231,13 @@ def build_snapshot(portfolio: Portfolio, policy: Policy, member: str | None = No
 
     ids = {h.instrument_id for h in holdings}
     flags = [f for f in portfolio.flags if f.instrument_id is None or f.instrument_id in ids]
+    acked = acknowledged or {}
+    shown = [f for f in flags if f.code not in acked.get(f.instrument_id or "", set())]
+    names = {h.instrument_id: (h.symbol or h.name) for h in holdings}
+    acknowledged_flags = sorted(
+        {f"{names.get(f.instrument_id, f.instrument_id)} {f.code}" for f in flags if f not in shown}
+    )
+    flags = shown
     for h in holdings:
         h.flag_codes = sorted({f.code for f in flags if f.instrument_id == h.instrument_id})
 
@@ -241,6 +259,7 @@ def build_snapshot(portfolio: Portfolio, policy: Policy, member: str | None = No
         single_name_breaches=breaches,
         dust=dust,
         flags=flags,
+        acknowledged_flags=acknowledged_flags,
         cost_pending_count=pending,
         cost_tracked_count=len(needs_cost) - pending,
         oldest_position_as_of=min(dates) if dates else None,

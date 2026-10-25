@@ -5,7 +5,8 @@ Drop results press releases, call transcripts or filings for a stock into
 when the document was published and is what lets a later thesis change count as "new evidence".
 Each document is split into passages with stable ids (`DOC.<SYMBOL>.<hash>.p<n>`), so the Analyst can
 cite them and code can check a quote really appears in the passage cited.
-Fetching documents automatically (EDGAR 8-K for US, exchange filings for India) is a separate, later source.
+`parakh-advisor fetch-docs` fills the same folder automatically (EDGAR for US; Screener-listed transcripts and
+results for India, with a TO_DOWNLOAD.txt for anything the exchange refuses to serve to a program).
 """
 
 from __future__ import annotations
@@ -23,11 +24,9 @@ MAX_PASSAGES = 60  # per stock, newest documents first: keeps the prompt bounded
 
 def _read(path: Path) -> str:
     if path.suffix.lower() == ".pdf":
-        try:
-            from pypdf import PdfReader
-        except ImportError as exc:
-            raise RuntimeError(f"{path.name}: reading PDFs needs `uv add pypdf`") from exc
-        return "\n".join((p.extract_text() or "") for p in PdfReader(str(path)).pages)
+        from parakh_advisor.sources.text import pdf_to_text
+
+        return pdf_to_text(path.read_bytes())
     return path.read_text(encoding="utf-8", errors="replace")
 
 

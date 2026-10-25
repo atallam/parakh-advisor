@@ -2,14 +2,18 @@
 
 Newest first. Every change to this folder is listed here, so you can see what moved without diffing.
 
-## 2026-10-24 - Day 10: SBI Contra, Invesco Smallcap and Bandhan Small Cap portfolio files
-- Added your SBI Contra (Sep 2026), Invesco India Smallcap (Sep 2026) and Bandhan Small Cap (30 Sep 2026) portfolio files to `data\inbox\funds`. Nippon India Small Cap is not needed: you have exited it (see "To do" below).
-- New: the reader handles a single-scheme PDF with a "Name of the Instrument | % to NAV" table in three side-by-side columns (Bandhan). Industry headings (bold, they carry the sum of their stocks) are skipped, wrapped names are joined, PDF ligature gaps ("Scienti fi c") are closed, cash and grand-total lines and the chart below the table are ignored. Result: 263 holdings, 87.0% of the fund (stated equity 86.4% plus 0.6% REIT).
-- Fix: SBI-style sheets list T-bills, index futures, options, margin money and side tables (derivative expiry dates, quantities) below the portfolio, and the side-table numbers looked like weights. Equity lines only are kept now (a line with an ISIN must hold a real ISIN; government-security ISINs, negative weights and the derivative lines are dropped). SBI Contra reads 88 lines, 92.0% of the fund.
-- Fix: the scheme name is now taken from the "Scheme name" label (SBI) or the first line of the title cell (Invesco), and an AMC-only name such as "INVESCO MUTUAL FUND" is no longer used as the title.
-- Fix (affects the numbers): a holding with an Indian ISIN that is not one of yours was still matched by name, so "Mahindra & Mahindra Financial Services" (SBI Contra, 1.95%) counted as Mahindra & Mahindra. Names are now matched only for lines with no ISIN, a foreign ISIN or the overseas marker.
-- Tests: 3 new in `tests/test_funds.py` (AMC sheet junk, title rules, column PDF) and 1 for the ISIN rule. The 17 tests in that file pass; the whole suite was not run (my sandbox on your laptop is out of disk), so run `uv run pytest` once.
-- To do: your WealthLens export (21 Oct) still lists Nippon India Small Cap as active. Mark it exited in WealthLens and re-export, otherwise the report still counts it.
+## 2026-10-24 - Day 12: automatic filing download (`fetch-docs`)
+- New command `parakh-advisor fetch-docs` fills `data\inbox\research\<SYMBOL>\` for you. Run it, then `thesis`, then `advise --online`.
+- US (fully automatic, SEC EDGAR): the last 3 earnings releases and the management discussion of the latest 10-Q/10-K.
+- India: concall transcripts and results announcements are found on each stock's public Screener page (one page per company, cached a day, 1 second pause). The exchange often answers 403 to programs. That is never worked around: those documents are listed in `TO_DOWNLOAD.txt` in the stock's folder with a suggested file name (`YYYY-MM-DD_concall-transcript.pdf`). Save them from your browser into that folder and the next `thesis` run reads them.
+- Already-fetched documents are skipped, so re-running is cheap. Add `--only META` to fetch one stock.
+- PDFs in the research folder are now read with pdfplumber (handles the exchange PDFs better).
+- A filing only counts as a source for confidence if it is within about 13 months of the newest data, so a stale filing cannot lift a thesis to MEDIUM.
+- Optional `screener_code` in `instruments.yaml` for stocks whose Screener URL differs from the symbol (e.g. M&M).
+- Wording fix: "no readable valuation" now says too little history, losses, or distorted earnings (it was "young or loss-making", wrong for HDFC Bank).
+- Transcript checks ported from the old Parakh: a download must look like a real concall (length, concall words, readable characters, normal word length), otherwise it is rejected with the reason and the next-older call is tried (up to 4 tries, 2 kept). If the newest call has no usable transcript the run says so ("treat the management commentary as stale"). Long transcripts keep the opening remarks and the whole Q&A.
+- `fetch-docs --browser-headers` (off by default): sends browser-style headers for India document downloads only, for when the exchange refuses the default request. Never used for SEC EDGAR or the Screener page.
+- Tests: 124 passing.
 
 ## 2026-10-24 - Day 9b: JioBlackRock Flexi Cap portfolio file
 - Added your JioBlackRock Flexi Cap Fund September 2026 portfolio (138 equity lines, 97.84% of the fund) to `data\inbox\funds`.

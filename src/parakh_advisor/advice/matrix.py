@@ -38,6 +38,7 @@ def decide(
     valuation: str,
     conviction: str = "unset",
     prior_trim_for_concentration: bool = False,
+    confidence: str = "MEDIUM",
 ) -> Advice:
     lo, hi = BANDS.get(conviction, BANDS["unset"])
     weak_reason = ["THESIS_WEAKENING"] if stance == "WEAKENING" else []
@@ -98,11 +99,28 @@ def decide(
             ["VALUATION_RICH", "ABOVE_BAND"],
             f"Valuation easing to FAIR, or the position sitting within its {conviction} band (up to {hi:g}%).",
         )
-    if valuation in {"CHEAP", "FAIR"} and weight < lo and conviction in {"core", "standard"}:
+    below_band = weight < lo and conviction in {"core", "standard"}
+    if valuation in {"CHEAP", "FAIR"} and below_band:
+        if confidence == "LOW":
+            # Size and valuation would support adding, but a numbers-only thesis is not enough to say so.
+            return Advice(
+                RiskAction.REVIEW,
+                ["LOW_CONFIDENCE", "BELOW_BAND", f"VALUATION_{valuation}"],
+                "Filings or call material supplied for this company, which lift the thesis to medium "
+                "confidence. The advice then becomes ADD if nothing else has changed.",
+            )
         return Advice(
             RiskAction.ADD,
             ["BELOW_BAND", f"VALUATION_{valuation}"],
             "The thesis weakening, valuation turning RICH, or the position reaching the bottom of its band.",
+        )
+    if (
+        below_band
+    ):  # below the band but the valuation gives no reason to add (not readable, or rich)
+        return Advice(
+            RiskAction.HOLD,
+            ["THESIS_INTACT", "BELOW_BAND", f"VALUATION_{valuation}"],
+            "A readable valuation (cheap or fair) while the position is below its band, or a driver moving to WATCH.",
         )
     return Advice(
         RiskAction.HOLD,

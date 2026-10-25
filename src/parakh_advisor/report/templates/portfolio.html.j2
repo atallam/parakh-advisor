@@ -105,7 +105,7 @@ footer { margin-top: 36px; color: var(--muted); font-size: .82rem; }
   </div>
 
   {% if s.fund_overlap %}
-  <div class="notice"><strong>Fund overlap by category.</strong> {% for l in s.fund_overlap %}<div>{{ l }}</div>{% endfor %}<div class="small">Stock-level overlap (for example funds that also hold Alphabet, Meta or Amazon) needs the funds' own portfolio files and comes later.</div></div>
+  <div class="notice"><strong>Fund overlap by category.</strong> {% for l in s.fund_overlap %}<div>{{ l }}</div>{% endfor %}{% if not s.lookthrough_rows %}<div class="small">Stock-level overlap (for example funds that also hold Alphabet, Meta or Amazon) needs the funds' own portfolio files; add them to data/inbox/funds and run with --online.</div>{% endif %}</div>
   {% endif %}
 
   {% if s.lookthrough_rows %}
@@ -175,6 +175,7 @@ footer { margin-top: 36px; color: var(--muted); font-size: .82rem; }
             {% if h.action %}<span class="chip {{ h.action.name.split('_')[0] }}">{{ h.action.value }}</span>{% endif %}
             {% if h.stance %}<div class="small">Thesis {{ h.stance | lower }} · valuation {{ (h.valuation or 'NA') | lower }} · conviction {{ h.conviction }} · {{ h.thesis_status }}</div>{% endif %}
             <div class="small">{{ h.note }}</div>
+            {% if h.size_note %}<div class="small"><strong>Size:</strong> {{ h.size_note }} Before tax.</div>{% endif %}
             {% if h.watch_drivers %}<div class="small">On watch: {{ h.watch_drivers | join('; ') }}</div>{% endif %}
             {% if h.would_change or h.counter_case or h.fund_lines %}<details class="more"><summary>Why, and what would change this</summary>
               {% if h.would_change %}<p><strong>What would change this advice:</strong> {{ h.would_change }}</p>{% endif %}

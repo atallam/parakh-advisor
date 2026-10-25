@@ -240,7 +240,9 @@ def parse_factsheet_lines(lines: list[str], section: str, ff: FundFile) -> str:
     return section
 
 
-PCT_TOKEN = re.compile(r"^-?\d+\.\d{2}%$")  # table figures have two decimals; chart ticks ("30.0%") do not
+PCT_TOKEN = re.compile(
+    r"^-?\d+\.\d{2}%$"
+)  # table figures have two decimals; chart ticks ("30.0%") do not
 NAV_STOP = re.compile(r"^(net cash|net current|cash and|cash &|grand total)\b", re.I)
 LIGATURE = re.compile(r"(?<=\w) (ffi|ff|fi|fl) (?=\w)")
 
@@ -260,7 +262,9 @@ def parse_nav_columns(words: list[dict], page_width: float) -> list[tuple[str, s
     if not edges:
         return []
     header_top = min((w["top"] for w in words if w["text"] == "Name"), default=-1.0)
-    words = [w for w in words if w["top"] > header_top + 2.5]  # drop the page title and column headers
+    words = [
+        w for w in words if w["top"] > header_top + 2.5
+    ]  # drop the page title and column headers
     rows: list[tuple[str, str, float]] = []
     prev_edge = -1.0
     for edge in edges:
@@ -303,9 +307,7 @@ def read_nav_columns_pdf(path: str | Path) -> dict[str, FundFile]:
     p = Path(path)
     with pdfplumber.open(p) as pdf:
         first = (pdf.pages[0].extract_text() or "").splitlines() if pdf.pages else []
-        title = next(
-            (ln.strip() for ln in first if re.search(r"\bfund\b", ln, re.I)), p.stem
-        )
+        title = next((ln.strip() for ln in first if re.search(r"\bfund\b", ln, re.I)), p.stem)
         ff = FundFile(path=p.name, title=title)
         for page in pdf.pages:
             text = page.extract_text() or ""
