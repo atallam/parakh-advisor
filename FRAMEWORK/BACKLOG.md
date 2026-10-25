@@ -12,7 +12,7 @@ New ideas go here, not into the build. An item enters only if it changes a decis
 - ADD gated on confidence and a readable valuation; rupee sizing of trims and adds; acknowledged data-quality flags (24 to 25 Oct)
 
 ## Next, in rough order of value
-- India peer exports: 8 to 12 Screener files per group under `data/inbox/peers/<group>/` and a group per Indian holding in `peers.yaml` (needs you)
+- India sector percentiles: **skipped for now (decided 25 Oct)**. Manual Screener exports per peer were judged too inefficient. Revisit only if a structured India fundamentals source appears (an API, or a permitted bulk download)
 - Per-holding "advice journal" (every label, date and price) to judge the advice after a few quarters
 - Run the SQL in your Supabase project, set keys, first `advise --publish` (needs you); then the WealthLens React "Advisory" tab
 - Fill `advisory_evidence` (source, url, excerpt) for the evidence the theses cite
