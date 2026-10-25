@@ -1,0 +1,132 @@
+{
+  "instrument_id": "US:ELF",
+  "version": 4,
+  "as_of_data_date": "2026-08-06",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:8909dd46dca44e0b25872737701844dd407105c9425156abbe42461063e065d3",
+  "business_summary": "e.l.f. Beauty operates in cosmetics. The evidence shows revenue growing at a 41.4% three-year CAGR to FY26, with an operating margin of 9.35% and FY26 net profit of 26.32 USD m. No company documents were supplied, so this description of the business is limited.",
+  "why_own": "The case rests on very fast sales growth (41.4% three-year CAGR) that has so far come with thinner profitability: net profit growth was -24.65% a year over three years and operating margin fell 5.46 pp. Evidence is thin because no results or call documents were supplied and there is no own-history P/E comparison, so the drivers below are metric-only and the cause of the margin and profit trend is untested.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Sales keep compounding at a high rate: three-year revenue CAGR stays well above 25%, against 41.4% now. (warn line tightened by code from 25 to 28.98.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 28.98,
+      "break_threshold": 15.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin stabilises rather than eroding further; it is 9.35% after falling 5.46 pp over three years.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 8.0,
+      "break_threshold": 6.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Leverage stays moderate: debt/equity is 0.74x and should not climb materially while profit is thin. (warn line tightened by code from 1 to 0.96.)",
+      "kind": "metric",
+      "indicator": "debt_equity",
+      "direction": "lte",
+      "warn_threshold": 0.96,
+      "break_threshold": 1.5,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.roce@202603"
+      ]
+    },
+    {
+      "id": "H1",
+      "statement": "Return on equity should stay above 10%. (added by code: currently 2.78.)",
+      "kind": "metric",
+      "indicator": "roe",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "H2",
+      "statement": "Trailing P/E should stay below 60x, or the price needs years of flawless growth. (added by code: currently 113.59.)",
+      "kind": "metric",
+      "indicator": "pe_ttm",
+      "direction": "lte",
+      "warn_threshold": 60.0,
+      "break_threshold": null,
+      "status": "WATCH",
+      "evidence_ids": [
+        "MET.pe_ttm@202606"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 5%, meaning growth is no longer converting into adequate profit.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 5.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Three-year revenue CAGR drops below 10%, which would remove the growth the thesis is built on.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 10.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Profit has not kept up with sales. Three-year net profit CAGR is -24.65%, FY26 net profit is 26.32 USD m, and one of the last four quarters was loss-making. The reasons are untested here.",
+      "evidence_ids": [
+        "MET.np_cagr_3@202603",
+        "MET.np_fy@202603",
+        "MET.loss_quarters_4@202603",
+        "MET.np_ttm@202603"
+      ]
+    },
+    {
+      "statement": "Valuation is demanding relative to current earnings and book value: trailing P/E is 113.59x and price/book is 5.99x, while ROCE is 2.05% and ROE is 2.78%. There is no own-history P/E comparison to judge it against.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202603",
+        "MET.roce@202603",
+        "MET.roe@202603",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Borrowings are 0.74x equity while returns on capital are low, so there is limited cushion if profit weakens further.",
+      "evidence_ids": [
+        "MET.debt_equity@202603",
+        "MET.roce@202603"
+      ]
+    }
+  ],
+  "stance": "WEAKENING",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis needs rapid growth to turn into profit, but three years of 41.4% sales CAGR produced a -24.65% profit CAGR and a 2.78% ROE. At 113.59x trailing earnings, and on an FY26 basis 247% of its own 5-year median, the price assumes a sharp margin recovery. The thesis is wrong if operating margin keeps sliding toward the 5% kill line, or if the trailing-profit rebound (59.61m vs FY26 26.32m) proves temporary. The thresholds are lenient. H1 and H2 are already breached yet only on WATCH, and D2's 6% break line allows another 3.35 pp of erosion before it trips. What would change this view: Two consecutive reported fiscal years of rising operating margin with ROE back above 10%, showing that the trailing profit rebound is durable rather than a one-off.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

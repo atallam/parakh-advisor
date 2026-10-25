@@ -1,0 +1,117 @@
+{
+  "instrument_id": "INE731H01025",
+  "version": 4,
+  "as_of_data_date": "2026-07-31",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:49cf58c83572e4ececdef96ddb21c99fe2fae333e8be909ee5720b3a3c63c8df",
+  "business_summary": "Action Construction Equipment operates in the construction equipment sector. In FY26 it earned a net profit of Rs 415 crore on a 15.4% operating margin, with no borrowings. Revenue has compounded at about 15% a year over three years and about 22% over five.",
+  "why_own": "The case rests on sustained double-digit revenue growth, a wider operating margin (up 5.1 points in three years) and high returns on capital (ROCE 28.7%) with no debt, and cash flow matches profit. The stock trades at 28.7x trailing earnings, near its own 5-year median, so the price already assumes this record continues. Only financial metrics were supplied, with no results releases or call transcripts, so every driver here is a metric driver.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 14.95%).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 12.0,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "The operating margin holds most of its gain (currently 15.36%, up 5.13 points over three years).",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 13.0,
+      "break_threshold": 11.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay high (ROCE currently 28.67%, ROE 22.9%).",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 22.0,
+      "break_threshold": 17.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202603",
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Reported profit converts into operating cash (cash flow / profit currently 1.01x).",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.8,
+      "break_threshold": 0.6,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202603",
+        "MET.np_fy@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "ROCE falls below 15%, meaning returns on capital have lost much of their current level.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 15.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Operating margin falls below 10%, giving back most of the three-year gain.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 10.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is demanding: 28.7x trailing earnings and 6.23x book, so a slowdown in growth or margin could be punished. The P/E is only about 1.8% above its 5-year year-end median.",
+      "evidence_ids": [
+        "MET.pe_ttm@202606",
+        "MET.pb@202603",
+        "MET.pe_vs_hist@202606"
+      ]
+    },
+    {
+      "statement": "Growth is slowing on the numbers: the 3-year revenue CAGR (14.95%) is below the 5-year CAGR (21.73%). The reason is untested with the evidence provided.",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    },
+    {
+      "statement": "The margin gain of 5.13 points over three years may not hold. Why the margin rose is untested with the evidence provided, so it could partly reverse.",
+      "evidence_ids": [
+        "MET.op_margin@202603",
+        "MET.op_margin_chg@202603",
+        "MET.np_cagr_3@202603"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis leans on a margin gain and growth rate that the evidence never explains. Profit compounded 34.24% a year against revenue at 14.95%, so most earnings growth came from margin expansion. Revenue growth is also slowing, from 21.73% over five years to 14.95% over three. At 28.7x earnings and 6.23x book, the price assumes both continue. The thesis is wrong if the margin drifts back toward its starting level of about 10.2% (15.36 minus 5.13), leaving earnings growth at the revenue pace. The kill threshold on margin (10%) sits below that starting level, so it only trips after the whole gain is gone. What would change this view: Evidence that the margin gain comes from durable structural causes, such as mix or pricing, and that revenue growth has stabilised at or above 14% for the next reported periods, would make me drop the objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

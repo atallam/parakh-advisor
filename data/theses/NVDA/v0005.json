@@ -1,0 +1,135 @@
+{
+  "instrument_id": "US:NVDA",
+  "version": 5,
+  "as_of_data_date": "2026-08-26",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:63a8c8ee392c57887ecd5a6d1db0937ddd493bfde2685f19daf028f1019b1da7",
+  "business_summary": "NVIDIA sells accelerated computing platforms, mainly data center AI systems (Blackwell, with Vera Rubin now shipping) plus graphics and edge products. Latest quarter revenue was $96.2 billion, up 106% from a year ago, with Data Center at $89.0 billion. FY26 operating margin was 61.7% and borrowings are minimal.",
+  "why_own": "Very fast growth with high margins and returns on almost no debt: 3-year revenue CAGR of 100%, operating margin of 61.7%, ROCE of 85.5%, and Data Center revenue up 117% from a year ago in the latest quarter. The new qualitative driver is on WATCH because the company itself says shortages of land, power and customer financing could hurt revenue while it sharply raises its supply commitments and guarantees.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a high rate: the 3-year revenue CAGR stays well above 40%, against 100% now. (warn line tightened by code from 40 to 70.03.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 70.03,
+      "break_threshold": 25.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202601",
+        "MET.rev_cagr_5@202601"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin holds at a high level, above 50%, against 61.7% now. It is up 40.3 points over three years, and whether that level lasts is untested.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 50.0,
+      "break_threshold": 40.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202601",
+        "MET.op_margin_chg@202601"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Profit converts into cash: cash from operations stays at 0.7x net profit or better, against 0.86x now.",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 0.7,
+      "break_threshold": 0.5,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202601",
+        "MET.np_fy@202601"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Returns on capital stay very high: ROCE above 50%, against 85.5% now. (warn line tightened by code from 50 to 59.84.)",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 59.84,
+      "break_threshold": 30.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202601",
+        "MET.roe@202601"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 35%, well under the current 61.7%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 35.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "3-year revenue CAGR falls below 15%, which would end the high-growth case.",
+      "indicator": "rev_cagr_3",
+      "op": "<",
+      "threshold": 15.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Valuation is high on book value (price/book 33x). The trailing P/E of 27x is about 16% below the company's own 5-year median of year-end P/Es (51.6x), but trailing profit is 1.6x the latest fiscal year's, so that comparison flatters it and there is little cushion if growth slows.",
+      "evidence_ids": [
+        "MET.pb@202601",
+        "MET.pe_ttm@202607",
+        "MET.pe_vs_hist@202607",
+        "MET.np_ttm@202601",
+        "MET.np_fy@202601"
+      ]
+    },
+    {
+      "statement": "Margins rose 40 points in three years and growth rates are extreme (100% revenue CAGR, 202% profit CAGR). Whether these can be sustained is untested in the evidence, and the growth rates will be hard to repeat.",
+      "evidence_ids": [
+        "MET.op_margin_chg@202601",
+        "MET.rev_cagr_3@202601",
+        "MET.np_cagr_3@202601"
+      ]
+    },
+    {
+      "statement": "Cash from operations was 0.86x net profit in FY26, below 1x, so reported profit is not fully matched by cash.",
+      "evidence_ids": [
+        "MET.cfo_np@202601"
+      ]
+    },
+    {
+      "statement": "The company has raised supply and capacity commitments from $119 billion to $279 billion, and has guarantees of up to $105 billion for a data center campus leased to OpenAI plus $36 billion of cloud service commitments and $99 billion of equity investments. These depend on customers and partners performing, and demand estimates can be inaccurate.",
+      "evidence_ids": [
+        "DOC.NVDA.f8b07c.p8",
+        "DOC.NVDA.f8b07c.p10",
+        "DOC.NVDA.f8b07c.p11",
+        "DOC.NVDA.f8b07c.p13",
+        "DOC.NVDA.f8b07c.p14"
+      ]
+    },
+    {
+      "statement": "China is largely closed: licensed H200 sales were restricted by the PRC government, shipments were under 1% of Data Center revenue, a $0.4 billion inventory and purchase obligation charge was taken, and a 25% tariff on licensed units cannot be passed on to customers.",
+      "evidence_ids": [
+        "DOC.NVDA.f8b07c.p16",
+        "DOC.NVDA.f8b07c.p21"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis is wrong if demand depends on financing that does not arrive. Nvidia says customers may postpone purchases for lack of data-center capacity or capital, yet it has lifted supply commitments from $119B to $279B and guaranteed up to $105B of OpenAI leases. The financing platforms are only MOUs that 'may not lead to definitive agreements'. Every driver is a backward-looking metric, so they cannot catch this. A 3-year CAGR can stay above the 70% warn line through several flat quarters. The kill lines (35% margin, 15% CAGR) trip only after most of the gains have gone. Valuation also looks cheaper than it is, because trailing profit is 1.6x the fiscal year's. What would change this view: Evidence that the financing platforms have become definitive agreements and that customers are paying for the $279B of committed capacity, with revenue and cash conversion holding up, would end my objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

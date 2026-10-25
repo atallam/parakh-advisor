@@ -1,0 +1,103 @@
+{
+  "instrument_id": "INE040A01034",
+  "version": 7,
+  "as_of_data_date": "2026-10-25",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:a21b6b11064011cb91e325979c99a033c555e682aea3de321408de76fd540a46",
+  "business_summary": "HDFC Bank is a bank, so it funds itself with deposits and the usual industrial ratios (operating margin, debt/equity, ROCE) do not apply. FY26 net profit was Rs 76,026 cr, and the trailing four quarters came to Rs 80,102 cr. None of the last four quarters was loss-making.",
+  "why_own": "The evidence shows a profitable bank compounding earnings at about 18% a year over 3 years, with ROE of 13.7% and a trailing P/E of 13.4x, about 31% below its own 5-year median. The evidence is limited to financial ratios, with no documents on asset quality, margins or management commentary, so the thesis rests on earnings growth and returns on equity only.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Return on equity stays at a healthy level for a bank; FY26 ROE was 13.72%.",
+      "kind": "metric",
+      "indicator": "roe",
+      "direction": "gte",
+      "warn_threshold": 12.0,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roe@202603"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Net profit keeps compounding at a double-digit rate; the 3-year CAGR to FY26 was 18.23%. (warn line tightened by code from 12 to 12.76.)",
+      "kind": "metric",
+      "indicator": "np_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 12.76,
+      "break_threshold": 8.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.np_cagr_3@202603",
+        "MET.np_fy@202603",
+        "MET.np_ttm@202603"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Revenue growth stays well ahead of a low-teens pace; the 3-year CAGR to FY26 was 26.86%. The evidence does not say what drove this, and whether it is organic is untested. (warn line tightened by code from 15 to 18.8.)",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 18.8,
+      "break_threshold": 10.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202603",
+        "MET.rev_cagr_5@202603"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "ROE falls below 8%, meaning the bank earns well under a normal cost of equity.",
+      "indicator": "roe",
+      "op": "<",
+      "threshold": 8.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "Any loss-making quarter appears in the last four reported quarters.",
+      "indicator": "loss_quarters_4",
+      "op": ">",
+      "threshold": 0.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Profit is growing more slowly than revenue (3-year CAGR of 18.23% against 26.86%). If that gap persists, returns on the larger base may be diluted. The evidence does not explain the gap, so its cause is untested.",
+      "evidence_ids": [
+        "MET.np_cagr_3@202603",
+        "MET.rev_cagr_3@202603"
+      ]
+    },
+    {
+      "statement": "The stock trades at 1.83x book with ROE of 13.72%. If ROE slips, the premium to book is harder to justify. The trailing P/E is 31% below its 5-year median, and the evidence does not say whether that gap reflects a lasting de-rating (untested).",
+      "evidence_ids": [
+        "MET.pb@202603",
+        "MET.roe@202603",
+        "MET.pe_vs_hist@202609",
+        "MET.pe_ttm@202609"
+      ]
+    },
+    {
+      "statement": "The evidence has no asset-quality, margin or deposit data, so credit-cost problems would not be visible in the tracked drivers until they reached profit.",
+      "evidence_ids": [
+        "MET.np_ttm@202603",
+        "MET.loss_quarters_4@202603"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The thesis would be wrong if the 3-year growth rates are flattered by the merger and the underlying earnings engine is slowing. The supplied calls show margins falling to 3.32 and a deposit mix moving toward wholesale and non-CASA funding. The thesis says it has no margin data, yet these passages exist. The kill lines (ROE below 8%, a loss-making quarter) would only trip after major damage. A 31% P/E discount may be a lasting de-rating of a bank whose ROE is only 13.7%, not a bargain. Against this, asset quality looks strong (GNPA 1.11%, credit cost 44 bps), so the case is about quality of growth and lenient triggers, not credit stress. What would change this view: Evidence that net interest margin and CASA ratio have stabilised or are recovering, together with merger-adjusted (organic) profit growth staying above the 12.76% warn line, would remove most of my objection.",
+  "change_decision": "REAFFIRM",
+  "change_log": [],
+  "rejected_changes": []
+}

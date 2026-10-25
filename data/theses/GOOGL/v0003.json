@@ -1,0 +1,193 @@
+{
+  "instrument_id": "US:GOOGL",
+  "version": 3,
+  "as_of_data_date": "2026-07-23",
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "thesis_analyst@1",
+  "inputs_digest": "sha256:3c0e8f7af2554cceadd6d0f485de2bb43688e15194f6dc91d5147a96399c4c58",
+  "business_summary": "Alphabet runs Google Services (Search, YouTube, subscriptions, devices), Google Cloud, and Other Bets such as autonomous transportation. Shared AI research sits at Alphabet level. In Q2 2026 revenue was $119.8 billion, up 24%, and Google Cloud grew 82% to $24.8 billion.",
+  "why_own": "Alphabet combines high profitability and low FY25 leverage (operating margin 37.28%, ROE 35.7%) with accelerating revenue (Q2 2026 up 24%, Cloud up 82%). The case now also depends on very heavy AI capex and on reported profit that includes large unrealized investment gains, so headline net income is not a clean guide to operating earnings.",
+  "drivers": [
+    {
+      "id": "D1",
+      "statement": "Revenue keeps compounding at a double-digit rate (3-year CAGR currently 12.51%, versus 17.15% over 5 years).",
+      "kind": "metric",
+      "indicator": "rev_cagr_3",
+      "direction": "gte",
+      "warn_threshold": 10.0,
+      "break_threshold": 7.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512"
+      ]
+    },
+    {
+      "id": "D2",
+      "statement": "Operating margin stays high (37.28% in FY25, up 6.05 pp over 3 years), so growth keeps converting into profit.",
+      "kind": "metric",
+      "indicator": "op_margin",
+      "direction": "gte",
+      "warn_threshold": 32.0,
+      "break_threshold": 27.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "MET.op_margin_chg@202512"
+      ]
+    },
+    {
+      "id": "D3",
+      "statement": "Returns on capital stay well above typical levels (ROCE 34.4%, ROE 35.7%) with little leverage (debt/equity 0.12x).",
+      "kind": "metric",
+      "indicator": "roce",
+      "direction": "gte",
+      "warn_threshold": 25.0,
+      "break_threshold": 18.0,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.roce@202512",
+        "MET.roe@202512",
+        "MET.debt_equity@202512"
+      ]
+    },
+    {
+      "id": "D4",
+      "statement": "Reported profit is backed by cash: operating cash flow was 1.25 times net profit in FY25.",
+      "kind": "metric",
+      "indicator": "cfo_np",
+      "direction": "gte",
+      "warn_threshold": 1.0,
+      "break_threshold": 0.8,
+      "status": "OK",
+      "evidence_ids": [
+        "MET.cfo_np@202512"
+      ]
+    }
+  ],
+  "kill_criteria": [
+    {
+      "id": "K1",
+      "description": "Operating margin falls below 25%, well under the FY25 level of 37.28%.",
+      "indicator": "op_margin",
+      "op": "<",
+      "threshold": 25.0,
+      "tripped": false
+    },
+    {
+      "id": "K2",
+      "description": "ROCE falls below 15%, less than half the FY25 level of 34.4%.",
+      "indicator": "roce",
+      "op": "<",
+      "threshold": 15.0,
+      "tripped": false
+    }
+  ],
+  "risks": [
+    {
+      "statement": "Trailing-4-quarter net profit (244,205 USD m) is far above FY25 net profit (132,170 USD m). The Q2 2026 filing shows why in part: other income was $98.0 billion, including $99.0 billion of net gains on equity securities that were primarily unrealized (SpaceX and a private company), against operating income of $40.8 billion. Q1 2026 also had $37.7 billion of other income, mainly unrealized gains. The trailing P/E of 17.04x therefore rests on a profit base inflated by non-operating, unrealized gains, and no quarter in the last 4 was loss-making.",
+      "evidence_ids": [
+        "MET.np_ttm@202512",
+        "MET.np_fy@202512",
+        "MET.pe_ttm@202606",
+        "MET.loss_quarters_4@202512",
+        "DOC.GOOGL.33f640.p18",
+        "DOC.GOOGL.df5d7a.p2",
+        "DOC.GOOGL.045b47.p2"
+      ]
+    },
+    {
+      "statement": "Capital intensity and financing are rising. Q2 2026 capex was $44.9 billion against operating cash flow of $39.1 billion, and 2026 capex was guided to $175 to $185 billion. In 2026 the company raised $49.6 billion from stock and mandatory convertible preferred and $20.3 billion of notes in Q2, plus $31.1 billion of notes in Q1. Long-term debt rose from $46.5 billion at end-2025 to $98.2 billion at June 2026, so the FY25 debt/equity of 0.12x and the cash conversion of 1.25x may not describe the current position.",
+      "evidence_ids": [
+        "DOC.GOOGL.33f640.p19",
+        "DOC.GOOGL.689e3a.p3",
+        "DOC.GOOGL.df5d7a.p6",
+        "DOC.GOOGL.045b47.p6",
+        "DOC.GOOGL.df5d7a.p12",
+        "MET.debt_equity@202512",
+        "MET.cfo_np@202512"
+      ]
+    },
+    {
+      "statement": "Price/book is 10.02x, so the valuation depends on returns staying near current levels (ROE 35.7%). The own-history P/E comparison (32.3%) mixes a FY25 P/E with trailing profit that is 1.8x the fiscal year's, so it is not a clean read on whether the stock is cheap or dear against its history.",
+      "evidence_ids": [
+        "MET.pb@202512",
+        "MET.roe@202512",
+        "MET.pe_vs_hist@202606",
+        "MET.pe_ttm@202606"
+      ]
+    },
+    {
+      "statement": "Legal and regulatory costs are recurring. A $5.2 billion EC fine (previously accrued) was paid in July 2026, and Q2 2026 included $2.1 billion of accrued charges from the PriceRunner decision.",
+      "evidence_ids": [
+        "DOC.GOOGL.33f640.p18"
+      ]
+    },
+    {
+      "statement": "The operating margin metric used for D2 and K1 (37.28% for FY25) is defined differently from the company's reported operating margin (32% for FY25, 34% in Q2 2026), so the two should not be compared directly. Rising depreciation from infrastructure spend and Alphabet-level AI costs (an operating loss of $5.8 billion in Q2 2026 versus $3.4 billion a year earlier) are pressures on margins.",
+      "evidence_ids": [
+        "MET.op_margin@202512",
+        "DOC.GOOGL.689e3a.p4",
+        "DOC.GOOGL.df5d7a.p4",
+        "DOC.GOOGL.df5d7a.p5",
+        "DOC.GOOGL.33f640.p16"
+      ]
+    },
+    {
+      "statement": "Revenue growth over 3 years (12.51% a year) is below the 5-year rate (17.15% a year). Recent quarters are faster (Q2 2026 up 24%), but the evidence does not say how long that will last.",
+      "evidence_ids": [
+        "MET.rev_cagr_3@202512",
+        "MET.rev_cagr_5@202512",
+        "DOC.GOOGL.df5d7a.p1"
+      ]
+    }
+  ],
+  "stance": "INTACT",
+  "confidence": "MEDIUM",
+  "skeptic_counter_case": "The case rests on FY25 metrics that no longer describe Alphabet. Trailing profit of $244.2bn is 1.8x FY25's, helped by a $98.0bn Q2 other-income gain that was mostly unrealized. Q2 capex ($44.9bn) exceeded operating cash flow ($39.1bn) and was financed with $49.6bn of new equity. The thesis would be wrong if AI capex earns less than its depreciation and funding cost, so operating margin and ROCE fall while the 17x P/E and 10x book multiples still rest on gains that can reverse. The kill thresholds (25% margin, 15% ROCE) allow a very large deterioration before anything trips. What would change this view: Operating cash flow covering capex again, with reported operating margin holding around 34% or higher and ROCE staying well above the warn level on the enlarged capital base, in filings where unrealized investment gains are excluded from the profit used for the metrics.",
+  "change_decision": "AMEND",
+  "change_log": [
+    {
+      "field": "business_summary",
+      "from_value": "Financial metrics only; no description of products or revenue mix",
+      "to_value": "Describes segments (Google Services, Google Cloud, Other Bets, Alphabet-level AI) and Q2 2026 revenue growth",
+      "new_evidence_ids": [
+        "DOC.GOOGL.33f640.p2",
+        "DOC.GOOGL.df5d7a.p1",
+        "DOC.GOOGL.df5d7a.p5"
+      ]
+    },
+    {
+      "field": "why_own",
+      "from_value": "Numbers-only case with no qualitative drivers",
+      "to_value": "Adds accelerating revenue and Cloud growth, and flags that heavy capex and unrealized investment gains shape reported profit",
+      "new_evidence_ids": [
+        "DOC.GOOGL.df5d7a.p1",
+        "DOC.GOOGL.df5d7a.p2",
+        "DOC.GOOGL.33f640.p18",
+        "DOC.GOOGL.33f640.p19"
+      ]
+    },
+    {
+      "field": "drivers",
+      "from_value": "D1 to D4 (metric only)",
+      "to_value": "D1 to D4 unchanged; D5 (qualitative: Search and Cloud growth) added now that investor documents exist",
+      "new_evidence_ids": [
+        "DOC.GOOGL.df5d7a.p1",
+        "DOC.GOOGL.33f640.p16"
+      ]
+    },
+    {
+      "field": "risks",
+      "from_value": "Unexplained gap between trailing and FY25 profit; no capex, financing or legal risks",
+      "to_value": "Gap partly explained by unrealized equity gains; adds capex and financing, legal charges and margin-definition risks",
+      "new_evidence_ids": [
+        "DOC.GOOGL.33f640.p18",
+        "DOC.GOOGL.33f640.p19",
+        "DOC.GOOGL.df5d7a.p6",
+        "DOC.GOOGL.df5d7a.p12"
+      ]
+    }
+  ],
+  "rejected_changes": []
+}
