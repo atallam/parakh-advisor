@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 
+from parakh_advisor.clock import today_ist
 from parakh_advisor.ingest.instruments import Instrument
 from parakh_advisor.sources.http import Fetcher, SourceError, http_get
 from parakh_advisor.sources.india.screener_docs import ScreenerDoc, choose, load_docs
@@ -133,7 +134,8 @@ def _download(
         return "blocked"
     try:
         text = pdf_to_text(raw) if raw[:4] == b"%PDF" else raw.decode("utf-8", "replace")
-    except Exception as exc:  # a damaged or unusual PDF must not stop the other documents
+    # a damaged or unusual PDF must not stop the other documents
+    except Exception as exc:  # noqa: BLE001
         rep.notes.append(f"{d.when} {d.title[:60]}: could not read the file ({exc})")
         return None
     is_call = d.kind == "transcript"
@@ -162,7 +164,7 @@ def fetch_all(
     doc_fetch: Fetcher | None = None,
     sleep: Callable[[float], None] = time.sleep,
 ) -> list[SymbolReport]:
-    today = today or date.today()
+    today = today or today_ist()
     root, cache = Path(research_dir), Path(cache_dir)
     reports: list[SymbolReport] = []
     edgar = EdgarFilings(cache, fetch)
@@ -192,7 +194,7 @@ def fetch_all(
         except SourceError as exc:
             rep.notes.append(str(exc))
             fresh = []
-        except Exception as exc:  # one stock's odd page must not stop the others
+        except Exception as exc:  # one stock's odd page must not stop the others  # noqa: BLE001
             rep.notes.append(f"unexpected error, skipped: {type(exc).__name__}: {exc}")
             fresh = []
         for d in fresh:

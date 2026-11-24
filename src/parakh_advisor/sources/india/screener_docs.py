@@ -16,6 +16,7 @@ from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import quote
 
+from parakh_advisor.clock import now_utc, today_ist
 from parakh_advisor.sources.http import Fetcher, SourceError, http_get
 
 PAGE_URLS = (
@@ -52,7 +53,7 @@ def _month_end(label: str, today: date) -> date:
 
 
 def parse_page(html: str, today: date | None = None) -> list[ScreenerDoc]:
-    today = today or date.today()
+    today = today or today_ist()
     docs: list[ScreenerDoc] = []
     parts = re.split(r"(?=<h3\b)", html)
     for part in parts:
@@ -123,7 +124,7 @@ def load_docs(
 ) -> list[ScreenerDoc]:
     cache = Path(cache_dir)
     path = cache / f"screener_page_{re.sub(r'[^A-Za-z0-9]+', '_', code)}.html"
-    if path.exists() and (datetime.now().timestamp() - path.stat().st_mtime) < max_age_days * 86400:
+    if path.exists() and (now_utc().timestamp() - path.stat().st_mtime) < max_age_days * 86400:
         html = path.read_text(encoding="utf-8")
     else:
         html, last = "", None

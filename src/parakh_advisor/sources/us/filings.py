@@ -11,9 +11,10 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from pathlib import Path
 
+from parakh_advisor.clock import now_utc, today_ist
 from parakh_advisor.sources.http import Fetcher, SourceError, get_json, http_get
 from parakh_advisor.sources.text import cap_text, extract_section, html_to_text
 from parakh_advisor.sources.us.edgar import Edgar
@@ -77,10 +78,7 @@ class EdgarFilings:
 
     def _submissions(self, cik: int, max_age_days: int = 1) -> dict:
         path = self.cache / f"edgar_sub_{cik}.json"
-        if (
-            path.exists()
-            and (datetime.now().timestamp() - path.stat().st_mtime) < max_age_days * 86400
-        ):
+        if path.exists() and (now_utc().timestamp() - path.stat().st_mtime) < max_age_days * 86400:
             return json.loads(path.read_text(encoding="utf-8"))
         data = get_json(SUBMISSIONS_URL.format(cik=cik), self.fetch)
         self.cache.mkdir(parents=True, exist_ok=True)
@@ -131,7 +129,7 @@ class EdgarFilings:
         self, ticker: str, today: date | None = None
     ) -> tuple[list[FetchedDoc], list[str]]:
         """Fetch what is available. Returns (documents, notes about anything that could not be read)."""
-        today = today or date.today()
+        today = today or today_ist()
         cik = self.edgar.cik(ticker)
         releases, periodic = self.pick(self._submissions(cik), today)
         docs: list[FetchedDoc] = []

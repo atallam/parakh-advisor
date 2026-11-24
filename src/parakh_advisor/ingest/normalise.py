@@ -13,6 +13,7 @@ from collections.abc import Callable
 from datetime import date
 from typing import Any
 
+from parakh_advisor.clock import today_ist
 from parakh_advisor.contracts.holdings_v2 import (
     AssetClass,
     Portfolio,
@@ -195,6 +196,6 @@ def build_portfolio(
             resolved.append(p)
         positions = resolved
     stamps = [p.price_as_of for p in positions if p.price_as_of]
-    ref = max(stamps).date() if stamps else date.today()
+    ref = max(stamps).date() if stamps else today_ist()
     flags = run_checks(positions, active, ref)
     return Portfolio(positions=positions, flags=flags, reference_date=ref, usd_inr=usd_inr)

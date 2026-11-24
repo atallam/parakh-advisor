@@ -157,7 +157,7 @@ def load_folder(folder: str | Path) -> dict[str, ScreenerCompany]:
         try:
             c = read_screener(f)
         except ScreenerError as exc:
-            print(f"warning: {exc}")
+            print(f"warning: {exc}")  # noqa: T201
             continue
         out[c.name.upper()] = c
     return out

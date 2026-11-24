@@ -88,7 +88,7 @@ class PeerLoader:
                 except SourceError as exc:
                     self.messages.append(f"peer {t} in '{name}' skipped ({exc})")
         for m in self.messages:
-            print(f"  - {m}", file=sys.stderr)
+            print(f"  - {m}", file=sys.stderr)  # noqa: T201
         self.messages = []
         self._done[name] = out
         return out
