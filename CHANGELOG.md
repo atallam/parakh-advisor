@@ -2,6 +2,15 @@
 
 Newest first. Every change to this folder is listed here, so you can see what moved without diffing.
 
+## 2026-11-24 - WealthLens CSV export as input
+- **Why:** the re-imported WealthLens export (24 Nov, after the Oct CAS) arrived as CSV, not JSON. `load_rows` (`ingest/wealthlens_json.py`) now reads `.csv` too; everything after it is unchanged.
+- **Mapping:** the CSV has no row id, ISIN column or price. ISIN is taken from `Ticker` (funds, bonds) or `Scheme Code` (stocks); a fund's `Scheme Code` stays its AMFI code; the row id is built from member, ISIN and line number; value comes from `Current Value`.
+- **USD rows (automatic rate):** the CSV has no exchange rate and its US `Current Value` is in dollars despite the "(INR)" header. New `sources/fx.py` fetches USD/INR itself: your `PARAKH_USD_INR` override if set, else xe.com (the converter page, read as text; your choice of first source), else the ECB rate via Frankfurter, else open.er-api.com, cached once a day in `data\cache\fx_usd_inr.json`; a cached rate up to 7 days old is used if both sources are down, and anything older stops the run with a clear message rather than showing US holdings as zero. Only fetched when the file has USD rows.
+- **Scope for testing:** only your own member's holdings are in this export (the family members' stocks and funds are not). Add them back when the system is verified.
+- **Windows fix:** a fresh Windows environment failed at import (`No time zone found with key Asia/Kolkata`) because Windows ships no time zone database. Added `tzdata` as a Windows-only dependency (`pyproject.toml`, `uv.lock`).
+- **Not changed:** the UGRO bond stays in net worth as `OTHER` and gets no thesis; SBIN (5 shares) is dust; funds need no conviction tier.
+- Tests: `tests\test_csv_ingest.py` and `tests\test_fx.py` (no network); the full suite passes.
+
 ## 2026-10-25 - Day 16: `advisory.v1` output and Supabase write
 - **Contract (`contracts/advisory_v1.py`):** seven tables from design 9.3 (`advisory_runs`, `_theses`, `_drivers`, `_actions`, `_alerts`, `_evidence`, `_portfolio`) built as plain row models from a finished run. IDs come from the content (uuid5), so the same run always has the same ids and publishing twice changes nothing. `created_at` on derived rows is the data date, so the same inputs give the same rows. `advisory_evidence` is in the schema but not filled yet.
 - **Tables and security (`supabase\advisory_v1.sql`):** run once in the Supabase SQL editor. Row level security on every table (you can read only your own rows), no deletes, only alert acknowledgement may be updated, plus two views of current state (`advisory_current_theses`, `advisory_current_actions`).
