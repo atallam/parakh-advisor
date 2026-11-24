@@ -40,6 +40,9 @@ _CSV_COLUMNS = {
 }
 
 
+_PRICED_TYPES = {"IN_STOCK", "US_STOCK", "IN_ETF", "US_ETF", "MF"}
+
+
 class ExportError(ValueError):
     """The file is not a usable WealthLens holdings export."""
 
@@ -48,8 +51,8 @@ def _csv_row(raw: dict[str, str], index: int) -> dict[str, Any]:
     """Map one CSV row to the JSON shape. The CSV has no row id, no ISIN column and no price.
 
     ISIN is read from `Ticker` (funds, bonds) or `Scheme Code` (stocks); the CSV's
-    `Scheme Code` stays the AMFI code for funds. Prices are absent, so value comes from
-    `Current Value`.
+    `Scheme Code` stays the AMFI code for funds. There is no price column, so the unit price is
+    derived as `Current Value / Net Units` for stocks, ETFs and funds (US valuation needs it).
     """
     row: dict[str, Any] = {key: (raw.get(col) or "").strip() for col, key in _CSV_COLUMNS.items()}
     ticker, code = row.get("ticker", ""), (raw.get("Scheme Code") or "").strip()
@@ -59,6 +62,10 @@ def _csv_row(raw: dict[str, str], index: int) -> dict[str, Any]:
         row["isin"], row["scheme_code"] = code, ""
     else:
         row["isin"], row["scheme_code"] = "", code
+    # No price column: derive it from value and units (native currency), as the JSON export has it.
+    value, units = num(row.get("current_value")), num(row.get("units"))
+    if row.get("type") in _PRICED_TYPES and value and units and value > 0 and units > 0:
+        row["current_price"] = str(value / units)
     row["id"] = f"csv:{row['member_id']}:{row['isin'] or ticker or row['name']}:{index}"
     return row
 

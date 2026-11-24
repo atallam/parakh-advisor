@@ -61,3 +61,11 @@ def test_missing_columns_are_refused(tmp_path):
     p.write_text("Foo,Bar\n1,2\n", encoding="utf-8")
     with pytest.raises(ExportError, match="missing CSV columns"):
         load_rows(p)
+
+
+def test_unit_price_is_derived_from_value_and_units(tmp_path, monkeypatch):
+    monkeypatch.setattr("parakh_advisor.ingest.wealthlens_json._default_usd_inr", lambda: 90.0)
+    rows = load_rows(_write(tmp_path, STOCK, US))
+    assert float(rows[0]["current_price"]) == pytest.approx(834.4)
+    pf = build_portfolio(rows)
+    assert next(p for p in pf.positions if p.symbol == "AMZN").price == pytest.approx(246.82)
